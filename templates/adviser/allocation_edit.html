@@ -1,0 +1,38 @@
+<div class="card mt-6">
+  <!-- allocation details -->
+  <!-- prettier-ignore -->
+  <div class="card-header flex flex-row justify-between">
+    <h1 class="h6">
+      Editing Allocation for {{allocation.student_class.get_level_display }} 
+      {{department.department_name }} {{ allocation.get_semester_display}} semester
+    </h1>
+
+    <div class="flex flex-row justify-center items-center">
+      <a href="{% url 'adviser_semester_allocation' allocation.id %}">
+      <i class="fad fa-arrow-left mr-6"></i>
+      </a>
+    </div>
+  </div>
+  <!-- end allocation details -->
+
+  <!-- edit-allocation form -->
+  <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
+    <form
+      action="{% url 'adviser_edit_semester_allocation' allocation.id %}"
+      method="post"
+    >
+      {% csrf_token %}
+      <div id="div_id_course_list" class="mb-3">
+        <label
+          for="id_course_list"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{form.course_list.label}} <span class="asteriskField">*</span>
+        </label>
+        {{form.course_list}}
+      </div>
+      <button class="btn-indigo">Edit</button>
+    </form>
+  </div>
+  <!-- end edit allocation form -->
+</div>

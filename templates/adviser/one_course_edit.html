@@ -1,0 +1,83 @@
+{% load tailwind_filters %}
+
+<div class="card mt-6">
+  <!-- header -->
+  <div class="card-header flex flex-row justify-between">
+    <h1 class="h6">Edit Course</h1>
+
+    <div class="flex flex-row justify-center items-center">
+      <a href="{% url 'adviser_course' course.id %}">
+        <i class="fad fa-arrow-left mr-6"></i>
+      </a>
+    </div>
+  </div>
+  <!-- end header -->
+
+  <!-- body -->
+  <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
+    <!-- Form begins -->
+    <form action="{% url 'adviser_edit_course' course.id %}" method="post">
+      {% csrf_token %}
+
+      <div id="div_id_course_title" class="mb-3">
+        <label
+          for="id_course_title"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{form.course_title.label}} <span class="asteriskField">*</span>
+        </label>
+        {{form.course_title}}
+      </div>
+      <div class="mb-3" id="div_id_course_code">
+        <label
+          for="id_course_code"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{ form.course_code.label }} <span class="asteriskField">*</span>
+        </label>
+        {{ form.course_code }}
+      </div>
+      <div class="mb-3" id="div_id_course_units">
+        <label
+          for="id_course_units"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{ form.course_units.label }} <span class="asteriskField">*</span>
+        </label>
+        {{ form.course_units }}
+      </div>
+      <div class="mb-3" id="div_id_course_type">
+        <label
+          for="id_course_type"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{ form.course_type.label }} <span class="asteriskField">*</span>
+        </label>
+        {{ form.course_type }}
+      </div>
+      <div class="mb-3" id="div_id_prerequisites">
+        <label
+          for="id_prerequisites"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{ form.prerequisites.label }} <span class="asteriskField">*</span>
+        </label>
+        {{ form.prerequisites }}
+      </div>
+      <div class="mb-3" id="div_id_lecturer">
+        <label
+          for="id_lecturer"
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          {{ form.lecturer.label }} <span class="asteriskField">*</span>
+        </label>
+        {{ form.lecturer }}
+      </div>
+
+      <!-- {{ form|crispy }} -->
+      <button class="btn-indigo">Submit</button>
+    </form>
+    <!-- Form ends -->
+  </div>
+  <!-- end body -->
+</div>

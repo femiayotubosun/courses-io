@@ -1,0 +1,36 @@
+{% load tailwind_filters %}
+
+<div class="card mt-6">
+  <!-- header -->
+  <!-- TODO: 
+    Add descriptions
+-->
+  <div class="card-header flex flex-row justify-between">
+    <h1 class="h6">
+      Editing {{student_class.get_level_display}}
+      {{student_class.department.department_name}} data
+    </h1>
+
+    <div class="flex flex-row justify-center items-center">
+      <a href="{% url 'adviser_student_class' %}">
+        <i class="fad fa-arrow-left mr-6"></i>
+      </a>
+    </div>
+  </div>
+  <!-- end header -->
+
+  <!-- body -->
+  <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
+    <!-- Form begins -->
+    <form
+      action="{% url 'adviser_edit_student_class' student_class.id %}"
+      method="post"
+    >
+      {% csrf_token %} {{ form|crispy }}
+      <!-- {{ form|crispy }} -->
+      <button class="btn-indigo">Submit</button>
+    </form>
+    <!-- Form ends -->
+  </div>
+  <!-- end body -->
+</div>

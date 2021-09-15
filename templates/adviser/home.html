@@ -1,0 +1,205 @@
+<!-- General Report -->
+<div class="grid grid-cols-4 gap-6 xl:grid-cols-1">
+  <!-- card -->
+  <a href="{% url 'adviser_students_levels' %}" class="report-card">
+    <div class="card">
+      <div class="card-body flex flex-col">
+        <!-- top -->
+        <div class="flex flex-row justify-between items-center">
+          <div class="h6 text-indigo-700 fad fa-user-graduate"></div>
+          <span class="rounded-full text-white badge bg-teal-400 text-xs">
+            12%
+            <i class="fal fa-chevron-up ml-1"></i>
+          </span>
+        </div>
+        <!-- end top -->
+
+        <!-- bottom -->
+        <div class="mt-8">
+          <h1 class="h5 num-4">{{ students|length }}</h1>
+          <p>Student{% if students|length > 1 %}s{%endif%}</p>
+        </div>
+        <!-- end bottom -->
+      </div>
+    </div>
+    <div
+      class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"
+    ></div>
+  </a>
+  <!-- end card -->
+
+  <!-- card -->
+  <a href="{% url 'adviser_courses' %}" class="report-card">
+    <div class="card">
+      <div class="card-body flex flex-col">
+        <!-- top -->
+        <div class="flex flex-row justify-between items-center">
+          <div class="h6 text-red-700 fad fa-book"></div>
+          <span class="rounded-full text-white badge bg-red-400 text-xs">
+            6%
+            <i class="fal fa-chevron-down ml-1"></i>
+          </span>
+        </div>
+        <!-- end top -->
+
+        <!-- bottom -->
+        <div class="mt-8">
+          <h1 class="h5 num-4">{{ courses|length}}</h1>
+          <p>Course{% if courses|length > 1 %}s{%endif%}</p>
+        </div>
+        <!-- end bottom -->
+      </div>
+    </div>
+    <div
+      class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"
+    ></div>
+  </a>
+  <!-- end card -->
+
+  <!-- card -->
+  <a href="{% url 'adviser_lecturers' %}" class="report-card">
+    <div class="card">
+      <div class="card-body flex flex-col">
+        <!-- top -->
+        <div class="flex flex-row justify-between items-center">
+          <div class="h6 text-yellow-600 fad fa-chalkboard-teacher"></div>
+          <span class="rounded-full text-white badge bg-teal-400 text-xs">
+            72%
+            <i class="fal fa-chevron-up ml-1"></i>
+          </span>
+        </div>
+        <!-- end top -->
+
+        <!-- bottom -->
+        <!-- prettier-ignore -->
+        <div class="mt-8">
+          <h1 class="h5">{{lecturers|length}}</h1>
+          <p>
+            Lecturer{% if lecturers|length > 1 or lecturers|length == 0 %}s{%endif%}
+          </p>
+        </div>
+        <!-- end bottom -->
+      </div>
+    </div>
+    <div
+      class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"
+    ></div>
+  </a>
+  <!-- end card -->
+
+  <!-- card -->
+  <div class="report-card">
+    <div class="card">
+      <div class="card-body flex flex-col">
+        <!-- top -->
+        <div class="flex flex-row justify-between items-center">
+          <div class="h6 text-green-700 fad fa-layer-group"></div>
+          <span class="rounded-full text-white badge bg-teal-400 text-xs">
+            150%
+            <i class="fal fa-chevron-up ml-1"></i>
+          </span>
+        </div>
+        <!-- end top -->
+
+        <!-- bottom -->
+        <div class="mt-8">
+          <h1 class="h5">5</h1>
+          <p>Levels</p>
+        </div>
+        <!-- end bottom -->
+      </div>
+    </div>
+    <div
+      class="footer bg-white p-1 mx-4 border border-t-0 rounded rounded-t-none"
+    ></div>
+  </div>
+  <!-- end card -->
+</div>
+<!-- End General Report -->
+<!-- start numbers -->
+<div class="grid grid-cols-5 gap-6 xl:grid-cols-2">
+  <!-- card -->
+  <div class="card mt-6">
+    <div class="card-body flex items-center">
+      <div class="px-3 py-2 rounded bg-gray-600 text-white mr-3">
+        <i class="fad fa-box"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <h1 class="font-semibold">
+          <span class="num-2">{{ all_course_regs|length }}</span> forms
+        </h1>
+        <p class="text-xs"><span class="num-2"></span> Total</p>
+      </div>
+    </div>
+  </div>
+  <!-- end card -->
+  <!-- card -->
+  <div class="card mt-6">
+    <div class="card-body flex items-center">
+      <div class="px-3 py-2 rounded bg-green-600 text-white mr-3">
+        <i class="fad fa-thumbs-up"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <h1 class="font-semibold">
+          <span class="num-2">{{ approved_course_regs|length }}</span> forms
+        </h1>
+        <p class="text-xs"><span class="num-2"></span> Approved</p>
+      </div>
+    </div>
+  </div>
+  <!-- end card -->
+
+  <!-- card -->
+  <div class="card mt-6 xl:mt-1">
+    <div class="card-body flex items-center">
+      <div class="px-3 py-2 rounded bg-yellow-600 text-white mr-3">
+        <i class="fad fa-spinner"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <h4 class="font-semibold">
+          <span class="num-2">{{ pending_course_regs|length }}</span> forms
+        </h4>
+        <p class="text-xs"><span class="num-2"></span> pending</p>
+      </div>
+    </div>
+  </div>
+  <!-- end card -->
+
+  <!-- card -->
+  <div class="card mt-6 xl:mt-1">
+    <div class="card-body flex items-center">
+      <div class="px-3 py-2 rounded bg-red-600 text-white mr-3">
+        <i class="fad fa-ban"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <h1 class="font-semibold">
+          <span class="num-2">{{ unappr_course_regs|length }}</span> forms
+        </h1>
+        <p class="text-xs"><span class="num-2"></span> rejected</p>
+      </div>
+    </div>
+  </div>
+  <!-- end card -->
+
+  <!-- card -->
+  <div class="card mt-6 xl:mt-1 xl:col-span-2">
+    <div class="card-body flex items-center">
+      <div class="px-3 py-2 rounded bg-pink-600 text-white mr-3">
+        <i class="fad fa-exclamation-triangle"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <h1 class="font-semibold">
+          <span class="num-2">{{ all_course_regs|length }}</span> forms
+        </h1>
+        <p class="text-xs"><span class="num-2"></span> issues</p>
+      </div>
+    </div>
+  </div>
+  <!-- end card -->
+</div>
+<!-- end nmbers -->

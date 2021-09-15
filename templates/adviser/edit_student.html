@@ -1,0 +1,10 @@
+{% load tailwind_filters %}
+<div class="card mt-6">
+  <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
+    <!-- Form begins -->
+    <form action="{% url 'adviser_edit_student' student.id %}" method="post">
+      {% csrf_token %} {{ form|crispy}}
+      <button class="btn-indigo">Edit</button>
+    </form>
+  </div>
+</div>

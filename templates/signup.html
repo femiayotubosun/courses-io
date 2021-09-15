@@ -1,0 +1,73 @@
+{% extends "signin_base.html" %} {% block content %}
+{% load static %}
+
+  
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 order-md-2">
+          <img src="{% static 'coursesapp/images/undraw_file_sync_ot38.svg' %}" alt="Image" class="img-fluid">
+        </div>
+        <div class="col-md-6 contents">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="mb-4">
+              <h3>Sign Up</h3>
+            </div>
+            <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+              <div class="form-group first">
+                <label for="name">Username</label>
+                <input type="text" class="form-control" name="username" id="username" required>
+
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" name="email" id="email" required>
+
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required>
+                
+              </div>
+              <div class="form-group last mb-4">
+                <label for="re-password">Re-type Password</label>
+                <input type="password" class="form-control" name="re-password" id="re-password" required>
+                
+              </div>
+
+              <span class="d-block text-left my-4 text-muted"> Register as</span>
+              <div class="form-check form-check-inline d-flex mb-5 align-items-center">
+
+                  <label class="control control--radio mb-0" for="student"> <span class="caption">Student</span>
+                            <input class="form-check-input" type="radio" name="registeras" id="student" value="student" required>
+                                              <div class="control__indicator checked"></div>
+                  </label>
+                  <label class="control control--radio mb-0" for="lecturer"> <span class="caption">Lecturer</span>
+                            <input class="form-check-input" type="radio" name="registeras" id="lecturer" value="lecturer">
+                                              <div class="control__indicator"></div>
+                  </label>
+                  <label class="control control--radio mb-0" for="adviser"> <span class="caption">Adviser</span>
+                            <input class="form-check-input" type="radio" name="registeras" id="adviser" value="adviser">
+                                              <div class="control__indicator"></div>
+                  </label>
+
+              </div>
+
+              <input type="submit" value="Register" class="btn text-white btn-block btn-primary">
+
+         
+              </div>
+            </form>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+
+{% endblock %}

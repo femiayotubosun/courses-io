@@ -1,0 +1,21 @@
+{% load tailwind_filters %}
+<div class="card mt-6">
+  <!-- header -->
+  <div class="card-header flex flex-row justify-between">
+    <h1 class="h6">{{ reg.course.course_code }} {{reg.student.name}}</h1>
+
+    <div class="flex flex-row justify-center align-items-center">
+      <a href="{% url 'adviser_course_reg_one_student' student.id %}">
+        <i class="fad fa-arrow-left mr-6"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
+  <!-- Form begins -->
+  <form action="{% url 'adviser_edit_course_reg' reg.id %}" method="post">
+    {% csrf_token %} {{ form|crispy }}
+    <button class="btn-indigo">Submit</button>
+  </form>
+</div>

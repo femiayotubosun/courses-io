@@ -1,0 +1,145 @@
+{% load static %}
+
+<div class="card-header flex flex-row justify-between">
+  <a href="{% url 'adviser_students_in_level' student.student_class.level %}">
+    <h1 class="h6"><i class="fad fa-long-arrow-alt-left mr-2 mb-2"></i></h1>
+  </a>
+  </h1>
+
+ 
+</div>
+
+
+
+
+<div class="mt-6 grid grid-cols-2 gap-6 xl:grid-cols-1">
+  <!-- carryover section -->
+
+  {% if courses_carry|length %}
+  <div class="card bg-red-400 border-red-400 shadow-md text-white">
+    <div class="card-body flex flex-row">
+      <!-- info -->
+      <div class="py-2 ml-10">
+        <h1 class="h5">{{student.name}}</h1>
+        <p class="text-white text-xs">{{ student.matric_no }}</p>
+        <h1 class="h7 font-semibold">Carryover courses</h1>
+        <!-- courses list -->
+        <ul class="mt-4">
+          {% for course in courses_carry %}
+
+          <li class="text-sm font-light">
+            <i class="fad fa-ban mr-2 mb-2"></i> {{course.course_code}}
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- end courses list -->
+      </div>
+      <!-- end info -->
+    </div>
+  </div>
+  {% else %}
+  <div class="card bg-green-400 border-green-400 shadow-md text-white">
+    <div class="card-body flex flex-row">
+      <!-- info -->
+      <div class="py-2 ml-10">
+        <h1 class="h5">{{student.name}}</h1>
+        <p class="text-white text-xs">{{ student.matric_no }}</p>
+        <h1 class="h7 font-semibold">Carryover courses</h1>
+        <!-- courses list -->
+        <ul class="mt-4">
+          <li class="text-sm font-light">
+            <i class="fad fa-check mr-2 mb-2"></i> No Carryover Course
+          </li>
+        </ul>
+        <!-- end courses list -->
+      </div>
+      <!-- end info -->
+    </div>
+  </div>
+  {% endif %}
+  <!-- end carryover section -->
+
+  <!-- units data section -->
+  <div class="flex flex-col">
+    <!-- header -->
+    <div class="alert alert-dark mb-6">Summary of Units Data</div>
+    <!-- end header -->
+
+    <!--  units -->
+    <div class="grid grid-cols-2 gap-6 h-half">
+      <!-- total units section -->
+      <div class="card" style="position: relative">
+        <div class="py-3 px-4 flex flex-row justify-between">
+          <h1 class="h6">
+            <span class="num-4">{{ sem_units }}</span>
+            <p>Units Available</p>
+          </h1>
+
+          <div
+            class="
+              bg-gray-200
+              text-gray-700
+              border-gray-300 border
+              w-10
+              h-10
+              rounded-full
+              flex
+              justify-center
+              items-center
+            "
+          >
+            <i class="fad fa-box"></i>
+          </div>
+        </div>
+        <div class="resize-triggers">
+          <div class="expand-trigger">
+            <div style="width: 235px; height: 137px"></div>
+          </div>
+          <div class="contract-trigger"></div>
+        </div>
+      </div>
+      <!-- end total units section -->
+
+      <!-- outstanding units section -->
+      <div class="card" style="position: relative">
+        <div class="py-3 px-4 flex flex-row justify-between">
+          <h1 class="h6">
+            <span class="num-2">{{total_units}}</span>
+            <p>Units To Be Registered</p>
+          </h1>
+
+          <div
+            class="
+              bg-yellow-200
+              text-yellow-700
+              border-yellow-300 border
+              w-10
+              h-10
+              rounded-full
+              flex
+              justify-center
+              items-center
+            "
+          >
+            <i class="fad fa-spinner"></i>
+          </div>
+        </div>
+        <div class="resize-triggers">
+          <div class="expand-trigger">
+            <div style="width: 235px; height: 137px"></div>
+          </div>
+          <div class="contract-trigger"></div>
+        </div>
+      </div>
+      <!-- end outstanding units section -->
+    </div>
+    <!-- charts    -->
+  </div>
+  <!-- end charts -->
+</div>
+<br />
+<div class="flex flex-row justify-center items-center">
+  <a class="btn-indigo" href="{% url 'adviser_edit_student' student.id %}"
+  >Edit Student</a
+>
+</div>
