@@ -3,7 +3,7 @@
 # from coursesapp.models import Lecturer, LevelAdviser, Student
 # from coursesapp.utils import make_user
 
-
+    
 # class MakeUserTest(TestCase):
 #     def setUp(self) -> None:
 #         self.user = User.objects.create(

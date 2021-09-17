@@ -7,7 +7,9 @@ from coursesapp.models import (
     AcademicTimeline,
     Course,
     Department,
+    Lecturer,
     PortalOpen,
+    SemesterCourseAllocation,
     Student,
     LevelAdviser,
     StudentClass,
@@ -338,7 +340,7 @@ class AdviserTest(TestCase):
         self.students_in_level_url = reverse(
             "adviser_students_in_level", kwargs={"level_name": "1L"}
         )
-        self.one_student_url = reverse("adviser_one_student", kwargs={"student_id": 1})
+        self.one_student_url = reverse("adviser_one_student", kwargs={"student_id": 2})
         self.courses_url = reverse("adviser_courses")
         self.one_course_url = reverse("adviser_course", kwargs={"course_id": 1})
         self.one_course_data = reverse("adviser_course_data", kwargs={"course_id": 1})
@@ -394,12 +396,6 @@ class AdviserTest(TestCase):
         response = self.client.get(self.one_course_edit)
         self.assertEquals(200, response.status_code)
         self.assertTemplateUsed("adviser/dashboard_course_edit.html")
-
-    def test_POST_course_edit(self):
-        pass
-        # self.client.login(username="testuser", password="password1#q212P")
-        # response = self.client.get(self.one_course_url)
-        # self.assertEquals(200, response.status_code)
         # self.assertTemplateUsed("adviser/dashboard_course.html")
 
     def test_GET_students_levels(self):
@@ -417,13 +413,50 @@ class AdviserTest(TestCase):
     def test_GET_one_student_no_stud_class(self):
         self.client.login(username="testuser", password="password1#q212P")
         response = self.client.get(self.one_student_url)
-        self.assertEquals(302, response.status_code)
+        self.assertEquals(200, response.status_code)
         self.assertTemplateUsed("adviser/dashboard_student.html")
 
     def test_GET_one_student_(self):
         self.client.login(username="testuser", password="password1#q212P")
+
+        student = Student.objects.get(pk=2)
+
+        test_user2 = User.objects.create(
+            username="testuserwadf332", password="KLSDJN92&63)932"
+        )
+
+        d = Department.objects.create(department_name="Test")
+        lecturer = Lecturer.objects.create(
+            user=test_user2, name="Test Lecturer", department=d
+        )
+
+        course1 = Course.objects.create(
+            course_title="Test Course", course_code="TST111", lecturer=lecturer
+        )
+        course2 = Course.objects.create(
+            course_title="Test Course 2", course_code="TST112", lecturer=lecturer
+        )
+        course3 = Course.objects.create(
+            course_title="Test Course 3", course_code="TST113", lecturer=lecturer
+        )
+        course4 = Course.objects.create(
+            course_title="Test Course 4", course_code="TST114", lecturer=lecturer
+        )
+        course5 = Course.objects.create(
+            course_title="Test Course 5", course_code="TST115", lecturer=lecturer
+        )
+
+        sm_a = SemesterCourseAllocation.objects.create(
+            student_class=student.student_class
+        )
+
+        sm_a.course_list.add(course1, course2, course3, course4, course5)
+
+        AcademicTimeline.create_first()
         response = self.client.get(
             reverse("adviser_one_student", kwargs={"student_id": 2})
         )
         self.assertEquals(200, response.status_code)
+        self.assertTrue("courses_carry" in response.context)
+        self.assertTrue("courses_default" in response.context)
         self.assertTemplateUsed("adviser/dashboard_student.html")

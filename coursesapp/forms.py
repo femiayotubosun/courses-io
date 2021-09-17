@@ -4,6 +4,7 @@ from django import forms
 from django.forms import widgets
 from django.forms.widgets import Select
 from coursesapp.models import (
+    AcademicTimeline,
     Course,
     CourseRegistration,
     Lecturer,
@@ -162,3 +163,9 @@ class CourseRegEditForm(ModelForm):
     class Meta:
         model = CourseRegistration
         fields = ["status"]
+
+
+class TimelineForm(ModelForm):
+    class Meta:
+        model = AcademicTimeline
+        fields = ["academic_year", "academic_semester"]

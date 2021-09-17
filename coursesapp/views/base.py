@@ -5,17 +5,34 @@ from django.http import HttpResponse
 from django.urls import reverse
 from coursesapp.models import (
     AcademicTimeline,
+    Lecturer,
+    LevelAdviser,
     PortalOpen,
+    Student,
 )
 from coursesapp import utils
 
 
+@login_required
 def index(request):
-    return HttpResponse("Hello world")
+    user = request.user
+
+    try:
+        Student.objects.get(user=user)
+        return HttpResponse("Hello Student")
+    except Student.DoesNotExist:
+        try:
+            Lecturer.objects.get(user=user)
+            return redirect(reverse("lecturer_dashboard"))
+        except Lecturer.DoesNotExist:
+            try:
+                LevelAdviser.objects.get(user=user)
+                return redirect(reverse("adviser_dashboard"))
+            except:
+                return redirect(reverse("sigin"))
 
 
 def signup(request):
-
     if request.method == "POST":
         if not (request.POST["password"] == request.POST["re-password"]) or not (
             request.POST["username"]

@@ -189,6 +189,15 @@ class StudentTest(TestCase):
         self.assertEqual(course_alloc["default"].count(), 3)
         self.assertEqual(course_alloc["carryovers"].count(), 2)
 
+    def test_no_student_class_get_course_alloc(self):
+
+        student = Student.objects.create(user=self.test_user, name="Test Name")
+
+        with self.assertRaises(Exception) as context:
+            student.get_semester_allocation()
+
+        self.assertTrue("No Student Class" in str(context.exception))
+
     def test_init_course_reg(self):
         old_count = CourseRegistration.objects.all().count()
         student = Student.objects.create(

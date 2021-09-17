@@ -106,3 +106,28 @@ urlpatterns += [
         name="init_course_reg",
     ),
 ]
+
+
+urlpatterns += [
+    path("lecturer/dashboard/", views.lecturer.dashboard, name="lecturer_dashboard"),
+    path(
+        "lecturer/dashboard/courses/",
+        views.lecturer.courses,
+        name="lecturer_courses",
+    ),
+    path(
+        "lecturer/dashboard/courses/<int:course_id>/",
+        views.lecturer.one_course,
+        name="lecturer_one_course",
+    ),
+    path(
+        "lecturer/dashboard/courses/reg/approve/<int:course_id>/<int:student_id>/",
+        views.lecturer.approve_course_reg,
+        name="lecturer_approve_course_reg",
+    ),
+    path(
+        "lecturer/dashboard/courses/reg/reject/<int:course_id>/<int:student_id>/",
+        views.lecturer.one_course,
+        name="lecturer_reject_course_reg",
+    ),
+]

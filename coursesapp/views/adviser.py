@@ -1,14 +1,9 @@
-from django.forms.forms import Form
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import permission_required, login_required
 from django.urls import reverse
-from django.contrib.auth.models import User
-from coursesapp import utils
-from coursesapp import forms
 from coursesapp.forms import (
     CourseForm,
     CourseRegEditForm,
-    LecturerForm,
     SemAllocationEditForm,
     SemAllocationFilterForm,
     StudentClassEditForm,
@@ -17,7 +12,6 @@ from coursesapp.forms import (
 )
 from coursesapp.models import (
     AcademicTimeline,
-    LevelAdviser,
     Lecturer,
     Course,
     CourseRegistration,
@@ -153,7 +147,9 @@ def course_edit(request, course_id):
 
     if request.method == "POST":
         form = CourseForm(request.POST, instance=course)
+
         if form.is_valid():
+            print(request.POST)
             form.save()
             return redirect(reverse("adviser_course", kwargs={"course_id": course_id}))
     return render(
@@ -195,9 +191,6 @@ def student(request, student_id):
 
     student = Student.objects.get(pk=student_id)
 
-    if student.student_class == None:
-        return redirect(reverse("adviser_students_levels"))
-
     sem_units = student.student_class.max_units
 
     try:
@@ -220,7 +213,7 @@ def student(request, student_id):
             },
         )
 
-    except SemesterCourseAllocation.DoesNotExist:
+    except:
         return render(
             request,
             "adviser/dashboard_student.html",

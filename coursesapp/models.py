@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+from django.db.models.fields.related import ForeignKey
 from django.db.models.signals import pre_save
 
 # Create your models here.
@@ -40,9 +41,11 @@ class StudentClass(models.Model):
     max_units = models.IntegerField(default=24)
 
     def get_semester_allocation(self, semester=FIRST):
-        return SemesterCourseAllocation.objects.get(
+        alloc, _ = SemesterCourseAllocation.objects.get_or_create(
             student_class=self, semester=semester
         )
+
+        return alloc
 
     def __str__(self) -> str:
         return f"<Student Class: {self.department.department_name} {self.get_level_display()}>"
@@ -73,7 +76,7 @@ class AcademicYear(models.Model):
         return AcademicYear.objects.create(year=next_year)
 
     def __str__(self) -> str:
-        return f"<Academic Year: {self.year}>"
+        return f"{self.year}"
 
 
 class AcademicTimeline(models.Model):
@@ -161,7 +164,6 @@ class Student(Profile):
     def __str__(self) -> str:
         return f"<Student: {self.user.username}>"
 
-    #   TODO: aLlocation includes carryovers and semester allocation for his class
     def get_semester_allocation(self):
         course_alloc = {}
         if self.student_class:
@@ -173,22 +175,23 @@ class Student(Profile):
             )
             return course_alloc
         else:
-            return None
+            raise Exception("No Student Class")
 
     def init_course_reg(self):
         tl = AcademicTimeline.get_current()
         alloc = self.get_semester_allocation()
+        form = CourseRegistrationForm.objects.create(student=self, timeline=tl)
         courses = alloc["default"].all()
         courses_2 = alloc["carryovers"].all()
         default = [
             CourseRegistration.objects.get_or_create(
-                student=self, course=course, academic_timeline=tl
+                student=self, course=course, academic_timeline=tl, form=form
             )
             for course in courses
         ]
         carryovers = [
             CourseRegistration.objects.get_or_create(
-                student=self, course=course, academic_timeline=tl
+                student=self, course=course, academic_timeline=tl, form=form
             )
             for course in courses_2
         ]
@@ -245,9 +248,7 @@ class Course(models.Model):
     course_code = models.CharField(max_length=10)
     course_units = models.IntegerField(default=2)
     department = models.ForeignKey(Department, models.SET_NULL, blank=True, null=True)
-    prerequisites = models.ManyToManyField(
-        "Course", related_name="prequisites", blank=True
-    )
+    prerequisites = models.ManyToManyField("Course", blank=True)
     lecturer = models.ForeignKey(Lecturer, models.SET_NULL, blank=True, null=True)
 
     def __str__(self) -> str:
@@ -281,6 +282,11 @@ class StudentGrade(models.Model):
                 return grades[i][1]
 
 
+class CourseRegistrationForm(models.Model):
+    student = ForeignKey(Student, models.SET_NULL, blank=True, null=True)
+    timeline = ForeignKey(AcademicTimeline, models.SET_NULL, blank=True, null=True)
+
+
 class CourseRegistration(models.Model):
 
     APPROVED = "APR"
@@ -293,10 +299,20 @@ class CourseRegistration(models.Model):
         (UNAPPROVED, "Unapproved"),
     ]
 
+    class Meta:
+        unique_together = ("academic_timeline", "student", "course")
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=3, choices=COURSE_REG_STATUS_CHOICES, default=UNAPPROVED
+    )
+    form = models.ForeignKey(
+        CourseRegistrationForm,
+        models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="registrations",
     )
     academic_timeline = models.ForeignKey(
         AcademicTimeline, models.SET_NULL, blank=True, null=True
@@ -315,8 +331,6 @@ class CourseRegistration(models.Model):
             self.status = CourseRegistration.APPROVED
             self.save()
             return self
-        else:
-            return
 
     def reject_course_reg(self):
         self.status = CourseRegistration.UNAPPROVED
