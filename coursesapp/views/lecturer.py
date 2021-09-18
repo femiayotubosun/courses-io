@@ -1,7 +1,9 @@
+from coursesapp import forms
 from coursesapp.forms import TimelineForm
 from coursesapp.views.adviser import course_reg_edit_one_student, lecturers, student
 from coursesapp.models import (
     AcademicTimeline,
+    AcademicYear,
     Course,
     CourseRegistration,
     Lecturer,
@@ -88,13 +90,70 @@ def one_course(request, course_id):
         },
     )
 
-    pass
+
+@login_required
+@permission_required("coursesapp.is_lecturer")
+def archives(request):
+    lecturer = Lecturer.objects.get(user=request.user)
+    courses = Course.objects.filter(lecturer=lecturer)
+
+    return render(
+        request,
+        "lecturer/dashboard_archives_all_courses.html",
+        {
+            "lecturer": lecturer,
+            "courses": courses,
+            "title": "Lecturer Dashboard",
+            "header": "Archives | All Courses",
+        },
+    )
 
 
 @login_required
 @permission_required("coursesapp.is_lecturer")
-def archive(request):
+def course_archives(request, course_id):
     form = TimelineForm()
+    course = Course.objects.get(pk=course_id)
+
+    if request.method == "POST":
+        form = TimelineForm(request.POST)
+
+        if form.is_valid():
+
+            year = form.cleaned_data["academic_year"]
+            year = AcademicYear.objects.get(year=year)
+            sem = form.cleaned_data["academic_semester"]
+
+            try:
+                tl = AcademicTimeline.objects.get(
+                    academic_year=year, academic_semester=sem
+                )
+
+                # TODO: Check if this is the current timeline. Tell it is not yet archived.
+            except AcademicTimeline.DoesNotExist:
+                return redirect(
+                    reverse("lecturer_course_archives", kwargs={"course_id": course_id})
+                )
+                # TODO: Modal for not found
+
+            regs = CourseRegistration.objects.filter(
+                academic_timeline=tl, course=course
+            )
+
+            form = TimelineForm(instance=tl)
+
+            return render(
+                request,
+                "lecturer/dashboard_archives.html",
+                {"form": form, "header": "Archives", "course": course, "regs": regs},
+            )
+
+    # :TODO
+    return render(
+        request,
+        "lecturer/dashboard_archives.html",
+        {"form": form, "header": "Archives", "course": course},
+    )
 
     pass
 

@@ -130,4 +130,14 @@ urlpatterns += [
         views.lecturer.one_course,
         name="lecturer_reject_course_reg",
     ),
+    path(
+        "lecturer/dashboard/archives/",
+        views.lecturer.archives,
+        name="lecturer_archives",
+    ),
+    path(
+        "lecturer/dashboard/archives/<int:course_id>/",
+        views.lecturer.course_archives,
+        name="lecturer_course_archives",
+    ),
 ]

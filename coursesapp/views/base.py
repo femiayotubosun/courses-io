@@ -29,7 +29,7 @@ def index(request):
                 LevelAdviser.objects.get(user=user)
                 return redirect(reverse("adviser_dashboard"))
             except:
-                return redirect(reverse("sigin"))
+                return redirect(reverse("login"))
 
 
 def signup(request):

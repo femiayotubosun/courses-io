@@ -1,0 +1,67 @@
+{% load tailwind_filters %} {% load static %}
+
+<form
+  class="mb-4"
+  action="{% url 'lecturer_course_archives' course.id %}"
+  method="POST"
+>
+  {% csrf_token %} {{form|crispy}}
+  <button class="btn-indigo md">Check</button>
+</form>
+<div class="col-span-6 card flex flex-col">
+  <div class="flex-1 flex flex-col">
+    {% for reg in regs %}
+    <div
+      class="
+        flex
+        items-center
+        shadow-xs
+        transition-all
+        duration-300
+        ease-in-out
+        p-5
+        hover:shadow-md
+      "
+    >
+      <div class="w-10 h-10 overflow-hidden rounded-md">
+        <img
+          class="img-responsive"
+          src="{% static 'coursesapp/images/user.svg' %}"
+          alt=""
+        />
+      </div>
+      <h1 class="ml-3">{{ reg.student.name }}</h1>
+      <p class="ml-6 flex-1 text-xs">{{ reg.student.matric_no }}</p>
+      <p class="font-bold text-gray-900">{{ reg.get_status_display }}</p>
+    </div>
+    {% empty %}
+    <div
+      class="
+        flex
+        items-center
+        shadow-xs
+        transition-all
+        duration-300
+        ease-in-out
+        p-5
+        hover:shadow-md
+      "
+    >
+      <div class="w-10 h-10 overflow-hidden rounded-md">
+        <img
+          class="img-responsive"
+          src="{% static 'coursesapp/images/user.svg' %}"
+          alt=""
+        />
+      </div>
+      <h1 class="ml-3">Null</h1>
+      <p class="ml-6 flex-1 text-xs">Null</p>
+      <p class="font-bold text-gray-900">Null</p>
+    </div>
+
+    {% endfor %}
+    <!-- message -->
+
+    <!-- message -->
+  </div>
+</div>

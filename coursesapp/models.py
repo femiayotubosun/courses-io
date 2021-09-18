@@ -52,7 +52,7 @@ class StudentClass(models.Model):
 
 
 class AcademicYear(models.Model):
-    year = models.CharField(max_length=10)
+    year = models.CharField(max_length=10, unique=True)
 
     def make_sesssion_from_year(first_year: int) -> str:
         try:

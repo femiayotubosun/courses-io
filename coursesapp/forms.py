@@ -167,5 +167,15 @@ class CourseRegEditForm(ModelForm):
 
 class TimelineForm(ModelForm):
     class Meta:
+
+        FIRST = "FIR"
+        SECOND = "SEC"
+        SUMMER = "SUM"
+
+        SEMESTER_CHOICES = [
+            (FIRST, "First"),
+            (SECOND, "Second"),
+            (SUMMER, "Summer"),
+        ]
         model = AcademicTimeline
         fields = ["academic_year", "academic_semester"]
