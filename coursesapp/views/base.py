@@ -50,7 +50,9 @@ def signup(request):
                 email=request.POST["email"] if request.POST["email"] else None,
             )
             try:
+                print("Stuff")
                 utils.make_user(user, request.POST["registeras"])
+
                 return redirect(reverse("login"))
             except Exception as e:
                 return redirect(reverse("signup"))

@@ -18,7 +18,6 @@ class LecturerForm(ModelForm):
     class Meta:
         model = Lecturer
         fields = [
-            "user",
             "name",
         ]
 

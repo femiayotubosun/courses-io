@@ -1,5 +1,5 @@
 from coursesapp import forms
-from coursesapp.forms import TimelineForm
+from coursesapp.forms import LecturerForm, TimelineForm
 from coursesapp.views.adviser import course_reg_edit_one_student, lecturers, student
 from coursesapp.models import (
     AcademicTimeline,
@@ -7,7 +7,6 @@ from coursesapp.models import (
     Course,
     CourseRegistration,
     Lecturer,
-    LevelAdviser,
 )
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import permission_required, login_required
@@ -157,6 +156,21 @@ def course_archives(request, course_id):
 
     pass
 
+
+
+@login_required
+@permission_required("coursesapp.is_lecturer")
+def profile(request):
+    lecturer = Lecturer.objects.get(user=request.user)
+    form = LecturerForm(instance=lecturer)
+
+    if request.method == 'POST':
+        form = LecturerForm(request.POST, instance=lecturer)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('lecturer_profile'))
+    
+    return render(request, "lecturer/dashboard_profile.html", {"form": form})
 
 @login_required
 @permission_required("coursesapp.is_lecturer")

@@ -140,4 +140,10 @@ urlpatterns += [
         views.lecturer.course_archives,
         name="lecturer_course_archives",
     ),
+
+    path(
+        "lecturer/dashboard/profile/", 
+        views.lecturer.profile,
+        name="lecturer_profile"
+    )
 ]

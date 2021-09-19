@@ -1,0 +1,11 @@
+{% load tailwind_filters %}
+<form action="{% url 'lecturer_profile' %}" method="POST">
+
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <button class="btn-indigo">Submit</button>
+</form>
+
+
+    

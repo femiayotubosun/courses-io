@@ -9,11 +9,11 @@
         <h1 class="text-lg font-bold tracking-wide">{{ reg.student.name }}</h1>
         <p class="text-gray-600 mt-2">{{ reg.student.matric_no }}</p>
       </div>
-      <div class="flex flex-row mt-10 justify-center">
-        <div class="w-4/5 flex flex-row justify-between">
+      <div class="flex flex-row mt-8 justify-center">
+        <div class="w-2/5 flex flex-row justify-between px-1">
           <a
             href="{% url 'lecturer_approve_course_reg' reg.course.id reg.student.id %}"
-            class="btn-success btn-success btn-shadow py-3"
+            class="btn-success btn-success btn-shadow py-2"
           >
             Approve
           </a>

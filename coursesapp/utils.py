@@ -8,6 +8,6 @@ def make_user(user, role):
         g = Group.objects.get(name="lecturers")
         g.user_set.add(user)
     elif dict_of_models[role] == LevelAdviser:
-        g = Group.objects.get(name="level_advisers")
+        g = Group.objects.get(name="advisers")
         g.user_set.add(user)
     return dict_of_models[role].objects.create(user=user)
