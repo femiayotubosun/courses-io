@@ -171,6 +171,29 @@
                 duration-300
                 ease-in-out
               "
+              href="{% url 'lecturer_profile' %}"
+            >
+              <i class="fad fa-user text-xs mr-1"></i>
+              profile
+            </a>
+            <!-- end item -->
+            <!-- item -->
+            <hr>
+            <a
+              class="
+                px-4
+                py-2
+                block
+                capitalize
+                font-medium
+                text-sm
+                tracking-wide
+                bg-white
+                hover:bg-gray-200 hover:text-gray-900
+                transition-all
+                duration-300
+                ease-in-out
+              "
               href="{% url 'logout' %}"
             >
               <i class="fad fa-user-times text-xs mr-1"></i>
@@ -277,24 +300,6 @@
           Archives
         </a>
         <!-- end link -->
-        <!-- link -->
-        <a
-          href="{% url 'lecturer_profile' %}"
-          class="
-            mb-3
-            capitalize
-            font-medium
-            text-sm
-            hover:text-teal-600
-            transition
-            ease-in-out
-            duration-500
-          "
-        >
-          <i class="fad fa-chalkboard-teacher text-xs mr-2"></i>
-          My Profile
-        </a>
-        <!-- end link -->
       </div>
     </div>
     <div class="bg-gray-100 flex-1 p-6 md:mt-16">
@@ -306,7 +311,7 @@
   <!-- end wrapper -->
 
   <!-- script -->
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="{% static 'coursesapp/js/scripts.js' %}"></script>
   <!-- end script -->
 </body>
+

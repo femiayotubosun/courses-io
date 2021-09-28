@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+
+
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f8fafb;
@@ -268,3 +271,9 @@ h2 {
   background-color: #7e0cf5;
   opacity: 0.2;
 }
+
+
+.font-family-karla {
+    font-family: karla;
+}
+

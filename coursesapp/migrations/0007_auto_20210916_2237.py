@@ -11,17 +11,17 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='CourseRegistrationForm',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('student', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='coursesapp.student')),
-                ('timeline', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='coursesapp.academictimeline')),
-            ],
-        ),
-        migrations.AddField(
-            model_name='courseregistration',
-            name='form',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='registrations', to='coursesapp.courseregistrationform'),
-        ),
+        # migrations.CreateModel(
+        #     name='CourseRegistrationForm',
+        #     fields=[
+        #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+        #         ('student', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='coursesapp.student')),
+        #         ('timeline', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='coursesapp.academictimeline')),
+        #     ],
+        # ),
+        # migrations.AddField(
+        #     model_name='courseregistration',
+        #     name='form',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='registrations', to='coursesapp.courseregistrationform'),
+        # ),
     ]

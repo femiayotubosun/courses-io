@@ -1,0 +1,221 @@
+
+<div id="app">
+    {% if portal_open %}
+ 
+    <div class="flex flex-row justify-between w-full py-1 px-4 text-gray-800 font-semi-bold text-sm">
+        <h1>{{ course_form.total_current_units }} / {{ max_units }} units</h1>
+        <a href="http://" class="w-16 flex flex-row justify-around items-center text-gray-800"><i class="fad fa-print"></i>Print</a>
+    </div>
+
+    {% endif %}
+
+
+
+
+    {% if portal_open %}
+    <div class="table w-full my-8">
+        {% if messages %}
+<div class=" w-full flex justify-center">
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-close mb-5 w-1/3 sm:w-full">
+    <button class="alert-btn-close">
+        <i class="fad fa-times"></i>
+    </button>
+
+    <span>{{ message }}</span>
+
+</div>
+{% endfor %}
+</div>
+{% endif %}
+        {% if carryovers|length > 0%}
+        <p class="text-center font-bold text-gray-800">Carryovers</p>
+        <table class="w-full border mt-4">
+            <thead>
+                <tr class="bg-gray-50 border-b text-sm font-thin text-gray-500">
+                    <th class="border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            ID
+                        </div>
+                    </th>
+                    <th class="p-1 border-r text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Title
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Code
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Type
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Units
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Status
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Action
+      
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in carryovers %}
+              <tr class="bg-gray-100 text-center border-b text-sm text-gray-600">
+                  
+                <td class="border-r">{{forloop.counter }}</td>
+                <td class="p-1 border-r">{{ c.course.course_title }}</td>
+                <td class="p-2 border-r">{{ c.course.course_code }}</td>
+                <td class="p-2 border-r">{{ c.course.course_type }}</td>
+                <td class="p-2 border-r">{{ c.course.course_units }}</td>
+                <td class="p-2 border-r">
+                    {% if c.get_status_display == "Unapproved" %}
+                    <div class="bg-red-500 rounded py-1 text-red-100">{{ c.get_status_display }}</div>
+                    {% elif c.get_status_display == "Pending" %}
+                    <div class="bg-yellow-500 rounded py-1 text-yellow-100">{{ c.get_status_display }}</div>
+                    {% else %}
+                    <div class="bg-green-500 rounded py-1 text-green-100">{{ c.get_status_display }}</div>
+                    {% endif %}
+                </td>    
+                <td class="p-2 border-r">
+                    {% if c.status == "UNA" and c.can_register %}
+                    <a href="{% url 'student_request_reg' c.id %}" >
+                        <p class="underline cursor-pointer" >request register</p>
+                    </a>
+                    {% else %}
+                        <p  class="underline cursor-not-allowed" v-else>null</p>
+                    {% endif%}
+                </td>
+            </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <p class="text-center font-bold text-gray-800 mt-6">Current Semester</p>
+        <table class="w-full border mt-4">
+            <thead>
+                <tr class="bg-gray-50 border-b text-sm font-thin text-gray-500">
+                    <th class=" border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            ID
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Title
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Code
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Course Type
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Units
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Status
+      
+                        </div>
+                    </th>
+                    <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                        <div class="flex items-center justify-center">
+                            Action
+      
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+   
+            <tbody>
+                {% for c in regular %}
+              <tr class="bg-gray-100 text-center border-b text-sm text-gray-600 " v-for="(c, index) in regular" :key="c.id">
+                  
+                <td class="p-2 border-r">{{ forloop.counter }}</td>
+                <td class="p-1 border-r">{{ c.course.course_title }}</td>
+                <td class="p-2 border-r">{{ c.course.course_code }}</td>
+                <td class="p-2 border-r">{{ c.course.course_type }}</td>
+                <td class="p-2 border-r">
+                {{ c.course.course_units }}
+                </td>
+                <td class="p-2 border-r">
+                    {% if c.get_status_display == "Unapproved" %}
+                    <div class="bg-red-500 rounded py-1 text-red-100">{{ c.get_status_display }}</div>
+                    {% elif c.get_status_display == "Pending" %}
+                    <div class="bg-yellow-500 rounded py-1 text-yellow-100">{{ c.get_status_display }}</div>
+                    {% else %}
+                    <div class="bg-green-500 rounded py-1 text-green-100">{{ c.get_status_display }}</div>
+                    {% endif %}
+
+                </td>    
+                <td class="p-2 border-r">   
+                    {% if c.status == "UNA" and c.can_register %}
+                    <a href="{% url 'student_request_reg' c.id %}" >
+                    <p class="underline cursor-pointer">request register</p>
+                    </a>
+                    {% else %}
+                    <p class="underline cursor-not-allowed" v-else>null</p>
+
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    {% endif %}
+        
+
+<div class="w-full">
+{% if messages %}
+<div class=" w-full flex justify-center">
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-close mb-5 w-1/3 sm:w-full">
+    <button class="alert-btn-close">
+        <i class="fad fa-times"></i>
+    </button>
+
+    <span>{{ message }}</span>
+
+</div>
+{% endfor %}
+</div>
+{% endif %}
+    </div>
+    
+</div>
+
+
+<!-- v-if= "allowCourse(index) && canRegister" -->

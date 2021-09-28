@@ -1,15 +1,21 @@
+from typing import List
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
-from django.db.models.fields.related import ForeignKey
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save
+
+
+
+class SingletonModel(models.Model):
+    def save(*args, **kwargs):
+        pass
 
 # Create your models here.
 class Department(models.Model):
     department_name = models.CharField(max_length=255)
 
     def __str__(self) -> str:
-        return f"<Department: {self.department_name}>"
+        return f"{self.department_name.capitalize()}"
 
 
 class StudentClass(models.Model):
@@ -47,6 +53,11 @@ class StudentClass(models.Model):
 
         return alloc
 
+    def init_student_class(department: Department):
+        for year in StudentClass.YEAR_IN_SCHOOL_CHOICES:
+            StudentClass.objects.get_or_create(level=year[0], department=department)
+        return
+
     def __str__(self) -> str:
         return f"<Student Class: {self.department.department_name} {self.get_level_display()}>"
 
@@ -83,8 +94,13 @@ class AcademicTimeline(models.Model):
     """
     AcademicTimeline.get_current()
     AcademicTimeline.create_next()
-
     """
+
+    class Meta:
+        
+        unique_together = (
+            'academic_semester', 'academic_year'
+        )
 
     FIRST = "FIR"
     SECOND = "SEC"
@@ -113,7 +129,8 @@ class AcademicTimeline(models.Model):
             return AcademicTimeline.FIRST
 
     def get_current():
-        return AcademicTimeline.objects.all().last()
+        tl = AcademicTimeline.objects.all().last()
+        return AcademicTimeline.create_first() if not tl else tl
 
     def create_first():
         year = AcademicYear.create_first()
@@ -147,6 +164,14 @@ class Profile(models.Model):
 
 class Student(Profile):
 
+    FIRST_YEAR = "1L"
+    SECOND_YEAR = "2L"
+    THIRD_YEAR = "3L"
+    FOURTH_YEAR = "4L"
+    FIFTH_YEAR = "5L"
+
+    levels_list: List =[FIRST_YEAR, SECOND_YEAR, THIRD_YEAR, FOURTH_YEAR, FIFTH_YEAR]
+
     name = models.CharField(max_length=200, blank=True, null=True)
     matric_no = models.CharField(
         max_length=200,
@@ -154,15 +179,30 @@ class Student(Profile):
         blank=True,
         null=True,
     )
-    student_class = models.ForeignKey(
+    student_class: StudentClass = models.ForeignKey(
         StudentClass,
         models.SET_NULL,
         blank=True,
         null=True,
     )
+    promote_eligible = models.BooleanField(
+        default=True
+    )
 
     def __str__(self) -> str:
         return f"<Student: {self.user.username}>"
+
+    def promote(self):
+        if self.promote_eligible:
+            index_old_level = Student.levels_list.index(self.student_class.level)
+            if index_old_level == 4:
+                return
+            new_level = Student.levels_list[index_old_level + 1]
+            dept = self.student_class.department
+            student_class, _ = StudentClass.objects.get_or_create(level = new_level, department=dept)
+            self.student_class = student_class
+            self.save()
+        return self
 
     def get_semester_allocation(self):
         course_alloc = {}
@@ -180,7 +220,7 @@ class Student(Profile):
     def init_course_reg(self):
         tl = AcademicTimeline.get_current()
         alloc = self.get_semester_allocation()
-        form = CourseRegistrationForm.objects.create(student=self, timeline=tl)
+        form, _ = CourseRegistrationForm.objects.get_or_create(student=self, timeline=tl)
         courses = alloc["default"].all()
         courses_2 = alloc["carryovers"].all()
         default = [
@@ -195,8 +235,11 @@ class Student(Profile):
             )
             for course in courses_2
         ]
-
-        return default + carryovers
+        course_alloc = {
+            "default": default,
+            "carryovers": carryovers
+        }
+        return course_alloc
 
 
 class Lecturer(Profile):
@@ -283,8 +326,10 @@ class StudentGrade(models.Model):
 
 
 class CourseRegistrationForm(models.Model):
-    student = ForeignKey(Student, models.SET_NULL, blank=True, null=True)
-    timeline = ForeignKey(AcademicTimeline, models.SET_NULL, blank=True, null=True)
+    student = models.ForeignKey(Student, models.SET_NULL, blank=True, null=True)
+    timeline = models.ForeignKey(AcademicTimeline, models.SET_NULL, blank=True, null=True)
+    total_current_units = models.IntegerField(default=0)
+
 
 
 class CourseRegistration(models.Model):
@@ -302,7 +347,7 @@ class CourseRegistration(models.Model):
     class Meta:
         unique_together = ("academic_timeline", "student", "course")
 
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student: Student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=3, choices=COURSE_REG_STATUS_CHOICES, default=UNAPPROVED
@@ -312,7 +357,7 @@ class CourseRegistration(models.Model):
         models.SET_NULL,
         blank=True,
         null=True,
-        related_name="registrations",
+        related_name="courses",
     )
     academic_timeline = models.ForeignKey(
         AcademicTimeline, models.SET_NULL, blank=True, null=True
@@ -322,8 +367,13 @@ class CourseRegistration(models.Model):
         return f"<Course Registration: {self.student.user.username} {self.course.course_code} {self.get_status_display()}>"
 
     def request_course_reg(self):
-        self.status = CourseRegistration.PENDING
-        self.save()
+        form = self.form
+        course = self.course
+        max_units = self.student.student_class.max_units
+
+        if form.total_current_units + course.course_units <= max_units:
+            self.status = CourseRegistration.PENDING
+            self.save()
 
     def approve_course_reg(self):
 
@@ -333,8 +383,13 @@ class CourseRegistration(models.Model):
             return self
 
     def reject_course_reg(self):
+        form = self.form
+        course = self.course
+
         self.status = CourseRegistration.UNAPPROVED
         self.save()
+        form.total_current_units -= course.course_units
+        form.save()
         return self
 
 
@@ -368,8 +423,28 @@ class PortalOpen(models.Model):
     course_registration_open = models.BooleanField(default=True)
 
 
+def create_student_classes(sender, instance, **kwargs):
+   levels = ["1L", "2L", "3L", "4L", "5L",]
+   for level in levels:
+       sc, _ = StudentClass.objects.get_or_create(level=level, department=instance)
+    
+
+
+def form_units(sender, instance, **kwargs):
+    form = instance.form
+    regs = CourseRegistration.objects.filter(form=form)
+    regs = regs.filter(status="PEN")|regs.filter(status="APR")
+    regs = regs.all()
+    units = sum([reg.course.course_units for reg in regs])
+    form.total_current_units = units
+    form.save()
+
+
+
 def save_grade(sender, instance, **kwargs):
     instance.grade = StudentGrade.getLetterGrade(instance.score)
 
 
 pre_save.connect(save_grade, sender=StudentGrade)
+post_save.connect(create_student_classes, sender=Department)
+post_save.connect(form_units, sender=CourseRegistration)

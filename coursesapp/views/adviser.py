@@ -12,6 +12,7 @@ from coursesapp.forms import (
 )
 from coursesapp.models import (
     AcademicTimeline,
+    CourseRegistrationForm,
     Lecturer,
     Course,
     CourseRegistration,
@@ -22,6 +23,8 @@ from coursesapp.models import (
     StudentGrade,
 )
 
+from django.contrib import messages
+
 
 # Make views for adviser
 
@@ -31,6 +34,10 @@ from coursesapp.models import (
 def dashboard(request):
 
     department = Department.objects.filter(leveladviser__user=request.user).first()
+
+    if not department:
+        messages.error(request, "You do not have a department.")
+        return redirect(reverse('login'))
     title = f"Dashboard | {department.department_name}" if department else None
     lecturers = Lecturer.objects.filter(department=department)
     students = Student.objects.filter(student_class__department=department)
@@ -38,6 +45,8 @@ def dashboard(request):
     all_course_regs = CourseRegistration.objects.filter(
         student__student_class__department=department
     )
+    # :FIXME: FIX THE NAME HERE
+    all_forms = CourseRegistrationForm.objects.filter(student__student_class__department=department)
     approved_course_regs = all_course_regs.filter(status="APR")
     pending_course_regs = all_course_regs.filter(status="PEN")
     unappr_course_regs = all_course_regs.filter(status="UNA")
@@ -50,7 +59,7 @@ def dashboard(request):
             "lecturers": lecturers,
             "students": students,
             "courses": courses,
-            "all_course_regs": all_course_regs,
+            "all_course_regs": all_forms,
             "approved_course_regs": approved_course_regs,
             "pending_course_regs": pending_course_regs,
             "unappr_course_regs": unappr_course_regs,
@@ -342,35 +351,15 @@ def edit_sem_allocation(request, allocation_id):
 @login_required
 @permission_required("coursesapp.is_adviser")
 def student_class(request):
-    department = Department.objects.filter(leveladviser__user=request.user).first()
-    form = StudentClassFilterForm()
-    if request.method == "POST":
-        form = StudentClassFilterForm(request.POST)
-        if form.is_valid():
-            level = form.cleaned_data["level"]
+    department: Department = Department.objects.filter(leveladviser__user=request.user).first()
+    StudentClass.init_student_class(department=department)
+    classes: StudentClass = StudentClass.objects.filter(department=department)
 
-            student_class, _ = StudentClass.objects.get_or_create(
-                department=department, level=level
-            )
-            student_count = Student.objects.filter(student_class=student_class).count()
-            return render(
-                request,
-                "adviser/dashboard_student_class.html",
-                {
-                    "form": form,
-                    "title": "Classes",
-                    "header": "Classes",
-                    "student_class": student_class,
-                    "student_count": student_count,
-                },
-            )
+    for class_ in classes:
+        class_.student_count = Student.objects.filter(student_class=class_).count()
 
-    return render(
-        request,
-        "adviser/dashboard_student_class.html",
-        {"form": form, "title": "Classes", "header": "Classes"},
-    )
-
+    return render(request, "adviser/dashboard_student_class.html",{"classes": classes, "title": f"{department.department_name} Classes", "header": f"{department.department_name} Classes",
+    })
 
 @login_required
 @permission_required("coursesapp.is_adviser")
@@ -441,11 +430,11 @@ def course_reg_one_student(request, student_id):
         "adviser/dashboard_reg_one_student.html",
         {
             "department": department,
-            "tl": tl,
+            "timeline": tl,
             "student": student,
             "regs": regs,
             "title": "Course Registration",
-            "header": student.name,
+            "header": "Course Registration",
         },
     )
 
@@ -481,16 +470,32 @@ def initialize_course_reg(request):
     students = Student.objects.filter(student_class__department=department).all()
     try:
         [student.init_course_reg() for student in students]
-        print("success")
+        messages.success(request, "Intialized successfully.")
         return redirect(reverse("adviser_course_reg"))
     except:
-        print("failure")
+        messages.error(request, "Something went wrong")
         return redirect(reverse("adviser_course_reg"))
 
+
+
+@login_required
+@permission_required("coursesapp.is_adviser")
+def promote_students(request):
+    department = Department.objects.filter(leveladviser__user=request.user).first()
+    students = Student.objects.filter(student_class__department=department, promote_eligible=True).all()
+
+    try:
+        for student in students:
+            student.promote()
+        messages.success(request, "Promoted students successfully.")
+    except:
+        messages.error(request, "Some error occured.")
+        
+    return redirect(reverse("adviser_students_levels"))
 
 # Create if there's none
 
 # Put warning if, max_units < sem_allocation
 
 
-# Course Registrations
+# Course Regi

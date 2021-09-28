@@ -1,20 +1,16 @@
-<div class="card mt-6">
-  <!-- allocation details -->
   <!-- prettier-ignore -->
-  <div class="card-header flex flex-row justify-between">
-    <h1 class="h6">
-      Editing Allocation for {{allocation.student_class.get_level_display }} 
-      {{department.department_name }} {{ allocation.get_semester_display}} semester
-    </h1>
+  <!-- allocation details -->
 
-    <div class="flex flex-row justify-center items-center">
-      <a href="{% url 'adviser_semester_allocation' allocation.id %}">
-      <i class="fad fa-arrow-left mr-6"></i>
-      </a>
-    </div>
+  <div class="w-full">
+    <a href="{% url 'adviser_semester_allocation' allocation.id %}" class="underline">
+      Back
+    </a>
+    <h1 class="h7 my-2 text-center font-semibold"> Editing {{allocation.student_class.get_level_display }} 
+      {{department.department_name }} {{ allocation.get_semester_display}} semester course allocation data</h1>
   </div>
-  <!-- end allocation details -->
 
+  <!-- end allocation details -->
+<div class="card mt-6">
   <!-- edit-allocation form -->
   <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
     <form

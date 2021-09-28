@@ -1,3 +1,4 @@
+from datetime import time
 from coursesapp import forms
 from coursesapp.forms import LecturerForm, TimelineForm
 from coursesapp.views.adviser import course_reg_edit_one_student, lecturers, student
@@ -7,10 +8,12 @@ from coursesapp.models import (
     Course,
     CourseRegistration,
     Lecturer,
+    Student,
 )
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import permission_required, login_required
 from django.urls import reverse
+from django.contrib import messages
 
 
 @login_required
@@ -18,6 +21,10 @@ from django.urls import reverse
 def dashboard(request):
     lecturer = Lecturer.objects.get(user=request.user)
     courses = Course.objects.filter(lecturer=lecturer)
+    timeline = AcademicTimeline.get_current()
+
+    # course_reg = CourseRegistration.objects.filter(time)
+    students = Student.objects.filter(courseregistration__course__in=courses, courseregistration__academic_timeline=timeline)
 
     # Data
 
@@ -32,6 +39,7 @@ def dashboard(request):
             "lecturer": lecturer,
             "courses": courses,
             "title": "Lecturer Dashboard",
+            "students": students,
             "header": f"Welcome, {lecturer.name}",
         },
     )
@@ -115,26 +123,11 @@ def course_archives(request, course_id):
     course = Course.objects.get(pk=course_id)
 
     if request.method == "POST":
-        form = TimelineForm(request.POST)
-
-        if form.is_valid():
-
-            year = form.cleaned_data["academic_year"]
-            year = AcademicYear.objects.get(year=year)
-            sem = form.cleaned_data["academic_semester"]
-
-            try:
-                tl = AcademicTimeline.objects.get(
-                    academic_year=year, academic_semester=sem
-                )
-
-                # TODO: Check if this is the current timeline. Tell it is not yet archived.
-            except AcademicTimeline.DoesNotExist:
-                return redirect(
-                    reverse("lecturer_course_archives", kwargs={"course_id": course_id})
-                )
-                # TODO: Modal for not found
-
+        try:
+            yr = AcademicYear.objects.get(pk=request.POST['academic_year'])
+            semester = request.POST['academic_semester']
+            tl= AcademicTimeline.objects.get(academic_year=yr, academic_semester=semester)
+            form = TimelineForm(request.POST, instance=tl)
             regs = CourseRegistration.objects.filter(
                 academic_timeline=tl, course=course
             )
@@ -146,6 +139,14 @@ def course_archives(request, course_id):
                 "lecturer/dashboard_archives.html",
                 {"form": form, "header": "Archives", "course": course, "regs": regs},
             )
+        except:
+            messages.error(request, "This Timeline is invalid or Data not found")
+            return redirect(
+                reverse("lecturer_course_archives", kwargs={"course_id": course_id})
+            )
+                # TODO: Modal for not found
+
+
 
     # :TODO
     return render(
@@ -154,7 +155,7 @@ def course_archives(request, course_id):
         {"form": form, "header": "Archives", "course": course},
     )
 
-    pass
+
 
 
 
@@ -170,7 +171,7 @@ def profile(request):
             form.save()
             return redirect(reverse('lecturer_profile'))
     
-    return render(request, "lecturer/dashboard_profile.html", {"form": form})
+    return render(request, "lecturer/dashboard_profile.html", {"form": form, "title": "Dashboard", "header": "Dashboard | Lecturer"})
 
 @login_required
 @permission_required("coursesapp.is_lecturer")
@@ -179,8 +180,8 @@ def approve_course_reg(request, course_id, student_id):
         course__id=course_id, student__id=student_id
     )
     course_reg.approve_course_reg()
-    # :TODO Modal for approve successful
-    return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id}))
+    messages.success(request, 'Approved successfully')
+    return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id,}))
 
 
 @login_required
@@ -190,5 +191,5 @@ def reject_course_reg(request, course_id, student_id):
         course__id=course_id, student__id=student_id
     )
     course_reg.reject_course_reg()
-    # :TODO Modal for reject successful
+    messages.error(request, 'Rejected successfully')
     return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id}))

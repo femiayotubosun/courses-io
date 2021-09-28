@@ -105,6 +105,9 @@ urlpatterns += [
         views.adviser.initialize_course_reg,
         name="init_course_reg",
     ),
+    path("adviser/dashboard/promote/",
+    views.adviser.promote_students,
+    name="promote_students")
 ]
 
 
@@ -127,7 +130,7 @@ urlpatterns += [
     ),
     path(
         "lecturer/dashboard/courses/reg/reject/<int:course_id>/<int:student_id>/",
-        views.lecturer.one_course,
+        views.lecturer.reject_course_reg,
         name="lecturer_reject_course_reg",
     ),
     path(
@@ -146,4 +149,14 @@ urlpatterns += [
         views.lecturer.profile,
         name="lecturer_profile"
     )
+]
+
+
+urlpatterns += [path('student/dashboard/',views.student.dashboard , name="student_dashboard"),
+path('student/dashboard/mydata/', views.student.mydata, name="student_my_data"),
+path('student/dashboard/archives/', views.student.archives, name="student_archives"),
+path('student/dashboard/archives/forms/<int:form_id>/', views.student.course_form, name="student_archived_form"),
+path('student/dashboard/registration/', views.student.course_reg, name="student_registration"),
+path('student/registration/request/<int:reg_id>/', views.student.request_reg, name="student_request_reg"),
+
 ]

@@ -1,99 +1,98 @@
-
-{% extends "signin_base.html" %}
 {% load static %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regi.st - Login </title>
 
-  <div class="content">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 order-md-2">
-          <img src="{% static 'coursesapp/images/undraw_file_sync_ot38.svg' %}" alt="Image" class="img-fluid">
-        </div>
-        <div class="col-md-6 contents">
-          <div class="row justify-content-center">
-            <div class="col-md-8">
-              <div class="mb-4">
-              <h3>Sign In to <strong>Courses.io</strong></h3>
-              <p class="mb-4"></p>
-            </div>
+  <!-- Tailwindcss -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'coursesapp/css/dist.css' %}"
+    />
+
+    <!-- Custom css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'coursesapp/css/custom.css' %}">
+
+    <!-- Fontawesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+</head>
+<body>
+    <section class="flex h-screen">
+            <main class="w-96 bg-teal-400 p-7 space-y-5 hidden md:block">
+                    <header>
+                            <nav class="p-3">
+                                    <h4 style="font-family: 'montserrat regular';" class="text-xl text-white font-normal uppercase">Courses.io</h4>
+                            </nav>
+                    </header>
+
+                    <div class="p-3 my-7 space-y-6">
+                        <h1 style="font-family: 'montserrat regular';" class="text-2xl  text-white font-semibold">
+                            A course registration system
+                        </h1>
+                        <p class="text-white text-sm" style="font-family: 'inter';">
+                            Seamless course registration across all levels of the school.
+                        </p>
+                    </div>
+
+                    <div class="flex justify-center w-full">                     
+                        <img src="{% static 'coursesapp/images/system.svg' %}" alt="system">
+                    </div>
+            </main>
+
+
+            <main class="flex-auto bg-white space-y-7 p-2">
+                    <header class="py-5 px-5 my-4">
+                        <nav>
+                        </nav>
+                    </header>
+
+                    <div class="flex items-center justify-center p-5">
+                        <h4 style="font-family: 'montserrat regular';" class="text-3xl font-black text-black">
+                            Log in
+                        </h4>
+                    </div>
+
+               <section class="flex flex-col items-center justify-center">
+                {% if user.is_authenticated %}
+                    <p>Your account doesn't have access to this page. To proceed,
+                    please login with an account that has access.</p>>
+                {% endif %}
+
               {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-  {% endif %}
+              <p>Your username and password didn't match. Please try again.</p>
+             {% endif %}
+                    <form action="{% url 'login' %}" method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="email">
+                            <div class="relative mt-1">
+                                <input type="text" id="username" name="username" 
+                                class="p-4 w-80 h-10 rounded pl-10 text-sm focus:outline-none border border-gray-400 focus:border-green-200 font-light" placeholder="username">
 
-  {% if next %}
-    {% if user.is_authenticated %}
-      <p>Your account doesn't have access to this page. To proceed,
-      please login with an account that has access.</p>
-    {% else %}
-      <p>Please login to see this page.</p>
-    {% endif %}
-  {% endif %}
-            <form action="{% url 'login' %}" method="post">
-                {% csrf_token %}
-              <div class="form-group first">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username">
+                                <svg class="w-4 h-4 absolute top-0 m-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M20.822 18.096c-3.439-.794-6.641-1.49-5.09-4.418 4.719-8.912 1.251-13.678-3.732-13.678-5.081 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-2.979.688-3.178 2.143-3.178 4.663l.005 1.241h10.483l.704-3h1.615l.704 3h10.483l.005-1.241c.001-2.52-.198-3.975-3.177-4.663zm-8.231 1.904h-1.164l-.91-2h2.994l-.92 2z" clip-rule="evenodd"></path></svg>
+                            </div>
+                        </div>  
 
-              </div>
-              <div class="form-group last mb-4">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
-                
-              </div>
-              
-              <div class="d-flex mb-5 align-items-center">
-                <label class="control control--checkbox mb-0"><span class="caption">Remember me</span>
-                  <input type="checkbox" checked="checked"/>
-                  <div class="control__indicator"></div>
-                </label>
-                <span class="ml-auto"><a href="#" class="forgot-pass">Forgot Password</a></span> 
-              </div>
+                        <div class="password">
+                              <div class="relative mt-1 mb-2">
+                                  <input type="password"  id="password" name="password" class="p-4 w-80 h-10 rounded pl-10 text-sm focus:outline-none border border-gray-400 focus:border-green-200 font-light" placeholder="password">
+                                  <svg class="w-4 h-4 absolute top-0 m-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"></path></svg>
+                              </div>  
+                        </div>
 
-              <input type="submit" value="Log In" class="btn text-white btn-block btn-primary">
-            </form>
-            </div>
-          </div>
-          
-        </div>
-        
-      </div>
-    </div>
-  </div>
-{% endblock %}
+                        <button class="focus:outline-none bg-teal-400 focus:bg-teal-500 focus:ring focus:ring-green-200 w-80 h-9 text-white rounded">Log in</button>
+                    </form>
+               </section>
 
-
-{% comment %} 
-
-
-    {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-    {% endif %} {% if next %} {% if user.is_authenticated %}
-    <p>
-      Your account doesn't have access to this page. To proceed, please login
-      with an account that has access.
-    </p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %} {% endif %}
-
-    <form method="post" action="{% url 'login' %}">
-      {% csrf_token %}
-      <table>
-        <tr>
-          <td>{{ form.username.label_tag }}</td>
-          <td>{{ form.username }}</td>
-        </tr>
-        <tr>
-          <td>{{ form.password.label_tag }}</td>
-          <td>{{ form.password }}</td>
-        </tr>
-      </table>
-      <input type="submit" value="login" />
-      <input type="hidden" name="next" value="{{ next }}" />
-    </form>
-
-    {# Assumes you setup the password_reset view in your URLconf #}
-    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-  </body>
-</html> {% endcomment %}
+               <section class="flex flex-col items-center justify-center space-y-4">
+                    <div class="sign_up_link space-x-1">
+                        <span class="text-sm font-light">Don't have an account?</span> <a class="text-teal-500 hover:text-teal-600 text-sm font-light hover:underline" href="{% url 'signup' %}">Sign up</a>
+                    </div>
+               </section>
+            </main>
+    </section>
+</body>
+</html>

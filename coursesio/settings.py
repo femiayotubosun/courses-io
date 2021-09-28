@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind",
     "jazzmin",
+    'rest_framework',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -85,6 +86,14 @@ DATABASES = {
     }
 }
 
+    # "default": {
+    #     "ENGINE": "django.db.backends.postgresql",
+    #     "NAME": "lpgjwtml",
+    #     "USER": 'lpgjwtml',
+    #     "PASSWORD": 'GgOrv2j51Zvvv_8pgsk6COrlbVWiWqSp',
+    #     "HOST": 'raja.db.elephantsql.com',
+    #     'PORT': '5432'
+    # }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

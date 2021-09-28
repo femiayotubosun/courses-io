@@ -1,18 +1,15 @@
 {% load tailwind_filters %}
 
-<div class="card mt-6">
   <!-- header -->
-  <div class="card-header flex flex-row justify-between">
-    <h1 class="h6">Edit Course</h1>
-
-    <div class="flex flex-row justify-center items-center">
-      <a href="{% url 'adviser_course' course.id %}">
-        <i class="fad fa-arrow-left mr-6"></i>
-      </a>
-    </div>
+  <div class="w-full">
+    <a href="{% url 'adviser_course' course.id %}" class="underline">
+      Back
+    </a>
+    <h2 class="h7 my-2 text-center font-semibold"> Editing {{ course.course_code }} data</h2>
   </div>
   <!-- end header -->
 
+<div class="card mt-6">
   <!-- body -->
   <div class="card-body grid grid-cols-1 gap-6 lg:grid-cols-1">
     <!-- Form begins -->

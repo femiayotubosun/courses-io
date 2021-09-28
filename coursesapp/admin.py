@@ -12,6 +12,7 @@ from coursesapp.models import (
     AcademicYear,
     StudentGrade,
     PortalOpen,
+    CourseRegistrationForm
 )
 
 # Register your models here.
@@ -29,5 +30,6 @@ admin.site.register(
         StudentGrade,
         SemesterCourseAllocation,
         PortalOpen,
+        CourseRegistrationForm
     ]
 )

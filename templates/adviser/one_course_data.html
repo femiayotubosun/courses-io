@@ -1,123 +1,88 @@
 {% load static %}
-<h3 class="h6">Carryover Students</h3>
-<div class="col-span-6 card flex flex-col">
-  <div class="flex-1 flex flex-col">
-    {% for student in carryovers %}
-    <a
-      href="{% url 'adviser_one_student' student.id %}"
-      class="
-        flex
-        items-center
-        shadow-xs
-        transition-all
-        duration-300
-        ease-in-out
-        p-5
-        hover:shadow-md
-      "
-    >
-      <div class="w-10 h-10 overflow-hidden rounded-md">
-        <img
-          class="img-responsive"
-          src="{% static 'coursesapp/images/user.svg' %}"
-          alt=""
-        />
-      </div>
-      <h1 class="ml-3">{{ student.name }}</h1>
-      <p class="ml-6 flex-1 text-xs">{{ student.name }}</p>
-      <p class="font-bold text-gray-900">{{ student.name }}</p>
-    </a>
-    {% empty %}
-    <div
-      class="
-        flex
-        items-center
-        shadow-xs
-        transition-all
-        duration-300
-        ease-in-out
-        p-5
-        hover:shadow-md
-      "
-    >
-      <div class="w-10 h-10 overflow-hidden rounded-md">
-        <img
-          class="img-responsive"
-          src="{% static 'coursesapp/images/user.svg' %}"
-          alt=""
-        />
-      </div>
-      <h1 class="ml-3">Null</h1>
-      <p class="ml-6 flex-1 text-xs">Null</p>
-      <p class="font-bold text-gray-900">Null</p>
-    </div>
 
-    {% endfor %}
-    <!-- message -->
-
-    <!-- message -->
-  </div>
+<div class="w-full">
+  <a href="{% url 'adviser_course' course.id %}" class="underline">
+    Back
+  </a>
+  <h2 class="h7 my-2 text-center font-semibold">{{ course.course_code }} data</h2>
 </div>
-<h3 class="h6">All Students</h3>
-<div class="col-span-6 card flex flex-col">
-  <!-- <div class="px-3 border-b">
+<div class="w-full">
+  <h8 class="h8">Carryover students</h8>
+</div>
+<div class="table w-full my-4">
+  <table class="w-full border">
+    <thead>
+        <tr class="bg-gray-50 border-b text-sm font-thin text-gray-500">
+            <th class="p- border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    ID
+                </div>
+            </th>
+            <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    Name
 
-  </div> -->
+                </div>
+            </th>
+            <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    Matric No.
 
-  <div class="flex-1 flex flex-col">
-    {% for student in students %}
-    <a
-      href="{% url 'adviser_course' course.id %}"
-      class="
-        flex
-        items-center
-        shadow-xs
-        transition-all
-        duration-300
-        ease-in-out
-        p-5
-        hover:shadow-md
-      "
-    >
-      <div class="w-10 h-10 overflow-hidden rounded-md">
-        <img
-          class="img-responsive"
-          src="{% static 'coursesapp/images/user.svg' %}"
-          alt=""
-        />
-      </div>
-      <h1 class="ml-3">{{ student.name }}</h1>
-      <p class="ml-6 flex-1 text-xs">{{ student.name }}</p>
-      <p class="font-bold text-gray-900">{{ student.name }}</p>
-    </a>
-    {% empty %}
-    <div
-      class="
-        flex
-        items-center
-        shadow-xs
-        transition-all
-        duration-300
-        ease-in-out
-        p-5
-        hover:shadow-md
-      "
-    >
-      <div class="w-10 h-10 overflow-hidden rounded-md">
-        <img
-          class="img-responsive"
-          src="{% static 'coursesapp/images/user.svg' %}"
-          alt=""
-        />
-      </div>
-      <h1 class="ml-3">Null</h1>
-      <p class="ml-6 flex-1 text-xs">Null</p>
-      <p class="font-bold text-gray-900">Null</p>
-    </div>
-
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+      {% for student in carryovers %}
+      <tr class="bg-gray-100 text-center border-b text-sm text-gray-600">
+          
+        <td class="p-2 border-r">{{ forloop.counter }}</td>
+        <td class="p-2 border-r">{{ student.name }}</td>
+        <td class="p-2 border-r">{{ student.matric_no }}</td>
+  
+    </tr>
     {% endfor %}
-    <!-- message -->
+    </tbody>
+</table>
+</div>
 
-    <!-- message -->
-  </div>
+
+<div class="w-full">
+  <h8 class="h8">All students</h8>
+</div>
+
+<div class="table w-full my-4">
+  <table class="w-full border">
+    <thead>
+        <tr class="bg-gray-50 border-b text-sm font-thin text-gray-500">
+            <th class="p- border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    ID
+                </div>
+            </th>
+            <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    Name
+
+                </div>
+            </th>
+            <th class="p-2 border-r  text-sm font-thin text-gray-500">
+                <div class="flex items-center justify-center">
+                    Matric No.
+
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr class="bg-gray-100 text-center border-b text-sm text-gray-600">
+          
+        <td class="p-2 border-r">{{ forloop.counter }}</td>
+        <td class="p-2 border-r">{{ student.name }}</td>
+        <td class="p-2 border-r">{{ student.matric_no }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 </div>

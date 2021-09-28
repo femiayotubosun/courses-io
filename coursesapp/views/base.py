@@ -19,7 +19,7 @@ def index(request):
 
     try:
         Student.objects.get(user=user)
-        return HttpResponse("Hello Student")
+        return redirect(reverse("student_dashboard"))
     except Student.DoesNotExist:
         try:
             Lecturer.objects.get(user=user)

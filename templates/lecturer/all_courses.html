@@ -11,7 +11,7 @@
       <div class="flex flex-row mt-10 items-end">
         <div class="flex-1">
           <h1 class="font-extrabold text-4xl text-yellow-400">
-            {{ course.students_count }} students
+            {{ course.students_count }} student{% if not course.students_count == 1 %}s{%endif%}
           </h1>
           <p class="mt-3 mb-4 text-xs text-gray-500">offering this course</p>
           <a

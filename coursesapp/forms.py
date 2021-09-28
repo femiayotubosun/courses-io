@@ -1,3 +1,4 @@
+from django.contrib.auth import models
 from django.db.models import fields
 from django.forms import ModelForm, SelectMultiple, TextInput, NumberInput
 from django import forms
@@ -155,7 +156,7 @@ class StudentClassEditForm(ModelForm):
 class StudentForm(ModelForm):
     class Meta:
         model = Student
-        fields = ["name", "matric_no", "student_class"]
+        fields = ["name", "matric_no", "student_class", "promote_eligible"]
 
 
 class CourseRegEditForm(ModelForm):
@@ -174,7 +175,18 @@ class TimelineForm(ModelForm):
         SEMESTER_CHOICES = [
             (FIRST, "First"),
             (SECOND, "Second"),
-            (SUMMER, "Summer"),
+        (SUMMER, "Summer"),
         ]
         model = AcademicTimeline
         fields = ["academic_year", "academic_semester"]
+
+
+class StudentClassForm(ModelForm):
+    class Meta:
+        model = StudentClass
+        fields = ['department', 'level']
+
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = ['name']

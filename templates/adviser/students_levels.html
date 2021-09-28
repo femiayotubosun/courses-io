@@ -1,3 +1,23 @@
+
+{% if messages %}
+<div class=" w-full flex justify-center">
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-close mb-5 w-1/3 sm:w-full">
+    <button class="alert-btn-close">
+        <i class="fad fa-times"></i>
+    </button>
+
+    <span>{{ message }}</span>
+
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<div class="grid grid-cols-3 lg:grid-cols-1 gap-5 mb-4">
+  <a href="{% url 'promote_students' %}" class="btn-info"> Promote Students</a>
+</div>
+
 <div class="card-body grid grid-cols-6 lg:grid-cols-1">
   <a
     href="{% url 'adviser_students_in_level' '1L'%}"
