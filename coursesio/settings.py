@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import django_heroku
 from pathlib import Path
 import os
-
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 # Application definition
 
@@ -140,8 +143,22 @@ STATICFILES_DIR = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# if env('GAE_APPLICATION') == None:
+#     EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+#     ANYMAIL = {
+#         "MAILJET_API_KEY": env('MYAPP_MAILJET_API_KEY'),
+#         "MAILJET_SECRET_KEY": env('MYAPP_MAILJET_API_SECRET'),
+#     }
+# else:
+#     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+#     EMAIL_FILE_PATH = '/tmp/django-emails'
 
+EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+ANYMAIL = {
+    "MAILJET_API_KEY": env('MYAPP_MAILJET_API_KEY'),
+    "MAILJET_SECRET_KEY": env('MYAPP_MAILJET_API_SECRET'),
+} 
+DEFAULT_FROM_EMAIL = 'admin@courses.io'
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
@@ -199,3 +216,4 @@ JAZZMIN_UI_TWEAKS = {
 # CRISPY TAILWIND
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
+django_heroku.settings(locals())
