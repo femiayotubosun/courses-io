@@ -83,21 +83,21 @@ WSGI_APPLICATION = "coursesio.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+ "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env('DATABASE_NAME'),
+        "USER": env('DATABASE_USER'),
+        "PASSWORD": env('DATABASE_PASSWORD'),
+        "HOST": env('DATABASE_HOST'),
+        'PORT': '5432'
     }
 }
 
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": "lpgjwtml",
-    #     "USER": 'lpgjwtml',
-    #     "PASSWORD": 'GgOrv2j51Zvvv_8pgsk6COrlbVWiWqSp',
-    #     "HOST": 'raja.db.elephantsql.com',
-    #     'PORT': '5432'
-    # }
-
+    
+#    "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -153,12 +153,12 @@ LOGIN_REDIRECT_URL = "/"
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/tmp/django-emails'
 
-# EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
-# ANYMAIL = {
-#     "MAILJET_API_KEY": env('MYAPP_MAILJET_API_KEY'),
-#     "MAILJET_SECRET_KEY": env('MYAPP_MAILJET_API_SECRET'),
-# } 
-# DEFAULT_FROM_EMAIL = 'admin@courses.io'
+EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
+ANYMAIL = {
+    "MAILJET_API_KEY": env('MYAPP_MAILJET_API_KEY'),
+    "MAILJET_SECRET_KEY": env('MYAPP_MAILJET_API_SECRET'),
+} 
+DEFAULT_FROM_EMAIL = env('DEFAULT_MAIL')
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
