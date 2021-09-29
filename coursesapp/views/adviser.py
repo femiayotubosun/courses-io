@@ -20,7 +20,6 @@ from coursesapp.models import (
     StudentClass,
     Student,
     Department,
-    StudentGrade,
 )
 
 from django.contrib import messages
@@ -423,6 +422,7 @@ def course_reg_one_student(request, student_id):
     department = Department.objects.filter(leveladviser__user=request.user)
     tl = AcademicTimeline.get_current()
     student = Student.objects.get(pk=student_id)
+    form = CourseRegistrationForm.objects.get(student=student, timeline=tl)
     regs = CourseRegistration.objects.filter(student=student, academic_timeline=tl)
 
     return render(
@@ -433,6 +433,7 @@ def course_reg_one_student(request, student_id):
             "timeline": tl,
             "student": student,
             "regs": regs,
+            "form": form,
             "title": "Course Registration",
             "header": "Course Registration",
         },

@@ -1,5 +1,6 @@
-<div class="w-full mb-1 text-gray-800">
+<div class="w-full flex justify-between mb-1 text-gray-800">
   <a  href="{% url 'adviser_course_reg' %}" class="underline font-thin text-sm">Back</a>
+  <a href="{% url 'print_form' form.id %}" class="flex flex-row justify-around items-center text-gray-800"><i class="fad fa-file-pdf"></i><p class="ml-1">Download PDF</p></a>
 </div>
 
 <div class="w-full mb-4 text-center text-gray-800"><span class="font-semibold">{{student.name}} - {{timeline.academic_year}} {{ timeline.get_academic_semester_display }} semseter </span></div>

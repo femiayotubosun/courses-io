@@ -1,10 +1,13 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.urls import reverse
+from django.contrib import messages
+
 from coursesapp.models import (
     AcademicTimeline,
+    CourseRegistrationForm,
     Lecturer,
     LevelAdviser,
     PortalOpen,
@@ -50,9 +53,8 @@ def signup(request):
                 email=request.POST["email"] if request.POST["email"] else None,
             )
             try:
-                print("Stuff")
                 utils.make_user(user, request.POST["registeras"])
-
+                messages.success(request, "Registrations successful, please login")
                 return redirect(reverse("login"))
             except Exception as e:
                 return redirect(reverse("signup"))
@@ -92,3 +94,14 @@ def close_portal(request):
         p.course_registration_open = False
         p.save()
     return HttpResponse("Portal is open")
+
+
+
+# DOWNLOAD DATA
+@login_required
+def print_form(request, reg_id):
+    form = CourseRegistrationForm.objects.get(pk=reg_id)
+    data = utils.report(form)
+    data = open(data, 'rb')
+    response = FileResponse(data, as_attachment=True)
+    return response

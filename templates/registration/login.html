@@ -43,8 +43,8 @@
                     </div>
             </main>
 
-
-            <main class="flex-auto bg-white space-y-7 p-2">
+        
+            <main class="flex-auto bg-white space-y-7 p-2 items-center">
                     <header class="py-5 px-5 my-4">
                         <nav>
                         </nav>
@@ -57,14 +57,14 @@
                     </div>
 
                <section class="flex flex-col items-center justify-center">
-                {% if user.is_authenticated %}
-                    <p>Your account doesn't have access to this page. To proceed,
-                    please login with an account that has access.</p>>
-                {% endif %}
+                    {% if user.is_authenticated %}
+                        <p>Your account doesn't have access to this page. To proceed,
+                        please login with an account that has access.</p>
+                    {% endif %}
 
-              {% if form.errors %}
-              <p>Your username and password didn't match. Please try again.</p>
-             {% endif %}
+                    {% if form.errors %}
+                        <p>Your username and password didn't match. Please try again.</p>
+                    {% endif %}
                     <form action="{% url 'login' %}" method="post" class="space-y-4">
                         {% csrf_token %}
                         <div class="email">

@@ -14,6 +14,7 @@ urlpatterns += [
     path("createNextTimeline/", views.base.create_next_tl, name="create_next_tl"),
     path("openCourseRegPortal/", views.base.open_portal, name="open_portal"),
     path("closeCourseRegPortal/", views.base.close_portal, name="close_portal"),
+    path("printCourseReg/<int:reg_id>/", views.base.print_form, name="print_form")
 ]
 
 
@@ -148,7 +149,10 @@ urlpatterns += [
         "lecturer/dashboard/profile/", 
         views.lecturer.profile,
         name="lecturer_profile"
-    )
+    ),
+
+    path("lecturer/printeligible/<int:course_id>/",
+    views.lecturer.print_eligible, name="print_eligible")
 ]
 
 

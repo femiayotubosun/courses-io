@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from coursesapp.models import AcademicTimeline, AcademicYear, CourseRegistration, CourseRegistrationForm, PortalOpen, Student, StudentClass
 from django.contrib import messages
+from coursesapp.utils import report
 
 @login_required
 @permission_required("coursesapp.is_student")
@@ -168,6 +169,7 @@ def course_reg(request):
     units_exceeded = True if course_form.total_current_units < max_units else False
     can_register = registered_carryovers and units_exceeded
 
+    
     # Make carryovers compulsory and check if registering the course will exceed the maximum units allowed
     for reg in carryovers:
         units = reg.course.course_units
@@ -197,38 +199,6 @@ def course_reg(request):
     
     return render(request, "student/dashboard_course_registration.html", {"can_register": can_register, "portal_open": portal_open, "carryovers": carryovers, "regular": default,
     "max_units": max_units, "course_form": course_form, "header": f"Your Course Regisration for {tl.academic_year.year} {tl.get_academic_semester_display()} semester", "title": "Course Registration"})
-    
-
-    # I need to check if all carry overs are registered
-
-
-    # For each reg, check if they'll exceed max_units when registered
-
-
-
-
-    
-    #  TODO: Courses the student cannot register
-    # TODO FUNCTION FOR REGISTERING STUDENTS
-    # 
-    # student = model_to_dict(student)
-    # course_form = model_to_dict(course_form)
-
-    # carryovers = [CourseRegSerializer(instance=c).data for c in carryovers[:]]
-    # default = [CourseRegSerializer(instance=d).data for d in default[:]]
-
-    # context = {
-    #                             "student": student,
-    #                             # "sem_alloc": sem_alloc,
-    #                             "regular": default,
-    #                             "carryovers": carryovers,
-    #                             "max_units": max_units,
-    #                             "course_form": course_form
-    
-    # }
-    # return render(request, "student/dashboard_course_registration.html", {"context": context,
-    # "header": f"Your Course Regisration for {tl.academic_year.year} {tl.get_academic_semester_display()} semester", "title": "Course Registration"})
-    
 
 
 
@@ -244,3 +214,4 @@ def request_reg(request, reg_id):
 
     reg.request_course_reg()
     return redirect(reverse("student_registration"))
+

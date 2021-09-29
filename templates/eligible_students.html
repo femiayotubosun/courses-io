@@ -1,0 +1,27 @@
+
+<h1 style="color: #4485b8;">ELIGIBLE STUDENTS FOR {{ course.course_title }} - {{ course.course_code }}</h1>
+<p><strong style="color: #000;">Session: {{timeline.academic_year}} Semester: {{ timeline.get_academic_semester_display }}</strong><br />Lecturer: {{lecturer.name}}r</p>
+
+<table class="editorDemoTable" style="vertical-align: top; width: 718px; height: 82px;">
+<thead>
+<tr style="height: 23px;">
+<td style="width: 140px; height: 23px;">ID</td>
+<td style="width: 140px; height: 23px;">Name</td>
+<td style="width: 140px; height: 23px;">Matric No</td>
+<td style="width: 297px; height: 23px;">Department</td>
+</tr>
+</thead>
+<tbody>
+    {%for r in regs %}
+<tr style="height: 25px;">
+<td style="min-width: 140px; width: 140px; height: 25px;">{{ forloop.counter }}</td>
+<td style="min-width: 140px; width: 140px; height: 25px;">{{ r.student.name}}</td>
+<td style="min-width: 140px; width: 140px; height: 25px;">{{ r.student.matric_no}}</td>
+<td style="width: 297px; height: 25px;">{{ r.student.student_class.department.department_name}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<hr />
+<p>&nbsp;<span>Total Students</span>: <strong>{{regs|length}}</strong></p>
+<hr />

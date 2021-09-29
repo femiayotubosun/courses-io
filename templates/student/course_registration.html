@@ -4,7 +4,7 @@
  
     <div class="flex flex-row justify-between w-full py-1 px-4 text-gray-800 font-semi-bold text-sm">
         <h1>{{ course_form.total_current_units }} / {{ max_units }} units</h1>
-        <a href="http://" class="w-16 flex flex-row justify-around items-center text-gray-800"><i class="fad fa-print"></i>Print</a>
+        <a href="{% url 'print_form' course_form.id %}" class="flex flex-row justify-around items-center text-gray-800"><i class="fad fa-file-pdf"></i><p class="ml-1">Download PDF</p></a>
     </div>
 
     {% endif %}
@@ -13,7 +13,7 @@
 
 
     {% if portal_open %}
-    <div class="table w-full my-8">
+<div class="table w-full my-8">
         {% if messages %}
 <div class=" w-full flex justify-center">
 {% for message in messages %}

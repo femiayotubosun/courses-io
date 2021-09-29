@@ -1,5 +1,7 @@
 from datetime import time
-from coursesapp import forms
+
+from django.http.response import FileResponse
+from coursesapp import forms, utils
 from coursesapp.forms import LecturerForm, TimelineForm
 from coursesapp.views.adviser import course_reg_edit_one_student, lecturers, student
 from coursesapp.models import (
@@ -23,14 +25,8 @@ def dashboard(request):
     courses = Course.objects.filter(lecturer=lecturer)
     timeline = AcademicTimeline.get_current()
 
-    # course_reg = CourseRegistration.objects.filter(time)
     students = Student.objects.filter(courseregistration__course__in=courses, courseregistration__academic_timeline=timeline)
 
-    # Data
-
-    # Students
-
-    # Course Regs
 
     return render(
         request,
@@ -193,3 +189,24 @@ def reject_course_reg(request, course_id, student_id):
     course_reg.reject_course_reg()
     messages.error(request, 'Rejected successfully')
     return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id}))
+
+
+@login_required
+@permission_required("coursesapp.is_lecturer")
+def print_eligible(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    timeline = AcademicTimeline.get_current()
+    lecturer = Lecturer.objects.get(user=request.user)
+    regs = CourseRegistration.objects.filter(course=course, academic_timeline=timeline, status="APR")
+
+    context = {
+        "timeline": timeline,
+        "course": course,
+        "lecturer": lecturer,
+        "regs": regs
+    }
+
+    data = utils.eligible_report(context)
+    data = open(data, 'rb')
+    response = FileResponse(data, as_attachment=True)
+    return response
