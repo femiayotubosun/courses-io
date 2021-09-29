@@ -156,7 +156,7 @@ EMAIL_FILE_PATH = '/tmp/django-emails'
 EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
     "MAILJET_API_KEY": env('MAILJET_API_KEY'),
-    "MAILJET_SECRET_KEY": env('MAILJET_API_SECRET'),
+    "MAILJET_SECRET_KEY": env('MAILJET_SECRET_KEY'),
 } 
 DEFAULT_FROM_EMAIL = env('DEFAULT_MAIL')
 
