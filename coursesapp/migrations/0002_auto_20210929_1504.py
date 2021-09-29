@@ -15,8 +15,8 @@ def create_group_permissions(apps, schema_editor):
 
     LevelAdviser = apps.get_model("coursesapp", "LevelAdviser")
     content_type = ContentType.objects.get_for_model(LevelAdviser)
-    permission = Permission.objects.get(
-            codename="is_adviser"
+    permission, _ = Permission.objects.get_or_create(
+            codename="is_adviser", name="User is an adviser", content_type=content_type
         )
     advisers.permissions.add(permission)
 
@@ -29,8 +29,8 @@ def create_group_permissions(apps, schema_editor):
 
     Lecturer = apps.get_model("coursesapp", "Lecturer")
     content_type = ContentType.objects.get_for_model(Lecturer)
-    permission = Permission.objects.get(
-            codename="is_lecturer"
+    permission, _ = Permission.objects.get(
+            codename="is_lecturer", name="user is a lecturer", content_type=content_type
         )
     lecturers.permissions.add(permission)
 
