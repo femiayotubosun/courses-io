@@ -29,7 +29,7 @@ def create_group_permissions(apps, schema_editor):
 
     Lecturer = apps.get_model("coursesapp", "Lecturer")
     content_type = ContentType.objects.get_for_model(Lecturer)
-    permission, _ = Permission.objects.get(
+    permission, _ = Permission.objects.get_or_create(
             codename="is_lecturer", name="user is a lecturer", content_type=content_type
         )
     lecturers.permissions.add(permission)
