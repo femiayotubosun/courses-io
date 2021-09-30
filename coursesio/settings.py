@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-1kw+pot-rwju8baveq#nx+-d=jrm_%%#m-3zl!l6zec89b*(c)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -143,21 +143,13 @@ STATICFILES_DIR = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
-# if env('GAE_APPLICATION') == None:
-#     EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
-#     ANYMAIL = {
-#         "MAILJET_API_KEY": env('MYAPP_MAILJET_API_KEY'),
-#         "MAILJET_SECRET_KEY": env('MYAPP_MAILJET_API_SECRET'),
-#     }
-# else:
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/tmp/django-emails'
 
 EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
     "MAILJET_API_KEY": env('MAILJET_API_KEY'),
     "MAILJET_SECRET_KEY": env('MAILJET_SECRET_KEY'),
 } 
+
 DEFAULT_FROM_EMAIL = env('DEFAULT_MAIL')
 
 JAZZMIN_SETTINGS = {

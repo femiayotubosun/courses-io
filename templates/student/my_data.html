@@ -2,10 +2,8 @@
 
 
 <div class="w-full">
-    <h2 class="h7 my-2 text-center font-semibold">
-    {{ student.name }}
-    {{ student.student_class.department.department_name }}
-    {{ student.student_class.get_level_display }}
+    <h2 class="h7 my-2 text-left font-semibold">
+      Your profile
     </h2>
 </div>
 
@@ -23,15 +21,29 @@
 {% endfor %}
 </div>
 {% endif %}
+        <div class="w-1/2 sm:2-full flex flex-col">
+        <div class="grid grid-cols-2 mb-2">
+          <p class="font-bold text-gray-700">Department</p><p> {{ student.student_class.department.department_name }}</p>
+        </div>
+        <div class="grid grid-cols-2">
+          <p class="font-bold text-gray-700" >Level</p> <p>   {{ student.student_class.get_level_display }}</p>
+        </div>
+        </div>
+       
+     
 
-
-    <div class="w-full flex justify-center">
         <div class="card w-1/2 sm:w-full mt-4">
           <div class="card-body">
-            <form action="{% url 'student_my_data' %}" method="post" class="flex sm:flex-col sm:items-start items-center justify-between sm:justify-stretch">
+            <form action="{% url 'student_my_data' %}" method="post" class="">
               {% csrf_token %} {{form|crispy}}
+              {% if not student.student_class %}
+                      {{formset|crispy}}
+             
+              {% endif %}
+        
               <button type="submit" class="btn-indigo h-10 mt-2 sm:mt-0 sm:w-full">Edit</button>
             </form>
           </div>
         </div>
-      </div>
+
+

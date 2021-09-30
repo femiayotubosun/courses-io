@@ -186,7 +186,15 @@ class StudentClassForm(ModelForm):
         model = StudentClass
         fields = ['department', 'level']
 
+        widgets = {
+             "department": Select(
+                attrs={
+                    "required": "true"
+                })
+        }  
+
 class ProfileForm(ModelForm):
     class Meta:
         model = Student
         fields = ['name']
+

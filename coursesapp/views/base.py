@@ -40,10 +40,13 @@ def signup(request):
         if not (request.POST["password"] == request.POST["re-password"]) or not (
             request.POST["username"]
         ):
+            messages.error(request, "Passwords don't match")
             return redirect(reverse("signup"))
-            # Modal for passwords don't match
+            
         try:
             user = User.objects.get(username=request.POST["username"])
+
+            messages.error(request, "Username already exist")
             return redirect(reverse("signup"))
             # Modal user already exists
         except User.DoesNotExist:

@@ -8,6 +8,7 @@ from django.urls import reverse
 from coursesapp.models import AcademicTimeline, AcademicYear, CourseRegistration, CourseRegistrationForm, PortalOpen, Student, StudentClass
 from django.contrib import messages
 from coursesapp.utils import report
+from django.forms.formsets import formset_factory
 
 @login_required
 @permission_required("coursesapp.is_student")
@@ -16,11 +17,11 @@ def dashboard(request):
     student = Student.objects.get(user=request.user)
 
     if not student.student_class:
-        messages.error(request, "Please select your department and level")
+        messages.error(request, "Please complete your data")
         return redirect(reverse('student_my_data'))
 
     if not student.name:
-        messages.error(request, "Please set your name")
+        messages.error(request, "Please complete your data")
         return redirect(reverse('student_my_data'))
 
     all_course_regs = CourseRegistration.objects.filter(academic_timeline=tl, student=student)
@@ -28,7 +29,7 @@ def dashboard(request):
     pending_course_regs = all_course_regs.filter(status='PEN')
     unappr_course_regs = all_course_regs.filter(status='UNA')
 
-    header = "Welcome," + student.name if student.name else "student"
+    header = "Welcome, " + student.name if student.name else "student"
     return render(request, "student/dashboard.html", {
         "all_course_regs": all_course_regs,
         "approved_course_regs": approved_course_regs, 
@@ -44,27 +45,40 @@ def dashboard(request):
 def mydata(request):
 
     tl = AcademicTimeline.get_current()
-    sc_form = StudentClassForm()
+  
     student = Student.objects.get(user=request.user)
-
     pf_form = ProfileForm(instance=student)
+    StudentClassFormSet = formset_factory(StudentClassForm, extra=1)
+    formset = StudentClassFormSet()
 
-    context = {'timeline': tl, 'student':student, "header": "Dashboard | Student", "title": "My Data", 'form': sc_form if student.student_class is None else pf_form}
+    context = {'timeline': tl, 'student':student, "header": "Dashboard | Student", "title": "Edit your profile", 'form': pf_form, "formset": formset}
     
     
     if request.method == 'POST':
-        if 'department' in request.POST:
-            form = StudentClassForm(request.POST)
-            if form.is_valid():
-                sc = StudentClass.objects.get(level=form.cleaned_data['level'], department=form.cleaned_data['department'])
-                student.student_class = sc
-                student.save()
-                return redirect('student_my_data')
-        else:
-            form = ProfileForm(request.POST, instance=student)
-            if form.is_valid():
-                form.save()
-                return redirect('student_my_data')
+        form = ProfileForm(request.POST, instance=student)
+        formset = StudentClassFormSet(request.POST)
+
+        if all([form.is_valid(), formset.is_valid()]):
+            student = form.save()
+            print(formset.cleaned_data)
+            sc = StudentClass.objects.get(level=formset.cleaned_data[0]['level'], department=formset.cleaned_data[0]['department'])
+
+            student.student_class = sc
+            student.save()
+            return redirect('student_my_data')
+
+        # if 'department' in request.POST:
+        #     form = StudentClassForm(request.POST)
+        #     if form.is_valid():
+        #         sc = StudentClass.objects.get(level=form.cleaned_data['level'], department=form.cleaned_data['department'])
+        #         student.student_class = sc
+        #         student.save()
+        #         return redirect('student_my_data')
+        # else:
+        #     form = ProfileForm(request.POST, instance=student)
+        #     if form.is_valid():
+        #         form.save()
+        #         return redirect('student_my_data')
         
     
     return render(request, "student/dashboard_my_data.html", context)
@@ -119,8 +133,6 @@ def course_form(request, form_id):
 
     data = course_form.courses.all()
     student = course_form.student
-    # if s == student:
-    #     return redirect(reverse('student_dashboard'))
     return render(request, "student/dashboard_archived_form.html", {"data": data, "course_form": course_form, "student": student, "header": "Dashboard | Course Form", "title": "Archives" })
 
 
@@ -152,8 +164,8 @@ def course_reg(request):
 
     try:
         course_form = CourseRegistrationForm.objects.get(student=student, timeline=tl)
-    except CourseRegistration.DoesNotExist:
-        messages.error("Your Course form has not been initialized. Wait for level adviser...")
+    except CourseRegistrationForm.DoesNotExist:
+        messages.error(request, "Your Course form has not been initialized. Wait for level adviser...")
         return redirect(reverse('student_dashboard'))
 
     

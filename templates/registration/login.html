@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regi.st - Login </title>
 
+
+    <link rel="stylesheet" type="text/css" href="{% static 'coursesapp/css/dashboard.style.css' %}">
   <!-- Tailwindcss -->
     <link
       rel="stylesheet"
@@ -58,12 +60,35 @@
 
                <section class="flex flex-col items-center justify-center">
                     {% if user.is_authenticated %}
-                        <p>Your account doesn't have access to this page. To proceed,
-                        please login with an account that has access.</p>
+                    <div class="alert alert-error alert-close mb-5 sm:w-3/4">
+                        <button class="alert-btn-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    
+                        <span>You don't have access to this page.</span>
+                    </div>
                     {% endif %}
 
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-close mb-5 sm:w-3/4">
+                        <button class="alert-btn-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                 {% endif %}
+
                     {% if form.errors %}
-                        <p>Your username and password didn't match. Please try again.</p>
+                    <div class="alert alert-error alert-close mb-5 sm:w-3/4">
+                        <button class="alert-btn-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    
+                        <span>Incorrect password or username</span>
+                    </div>
                     {% endif %}
                     <form action="{% url 'login' %}" method="post" class="space-y-4">
                         {% csrf_token %}
@@ -94,5 +119,6 @@
                </section>
             </main>
     </section>
+    <script src="{% static 'coursesapp/js/scripts.js' %}"></script>
 </body>
 </html>
