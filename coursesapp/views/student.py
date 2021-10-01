@@ -66,19 +66,6 @@ def mydata(request):
             student.student_class = sc
             student.save()
             return redirect('student_my_data')
-
-        # if 'department' in request.POST:
-        #     form = StudentClassForm(request.POST)
-        #     if form.is_valid():
-        #         sc = StudentClass.objects.get(level=form.cleaned_data['level'], department=form.cleaned_data['department'])
-        #         student.student_class = sc
-        #         student.save()
-        #         return redirect('student_my_data')
-        # else:
-        #     form = ProfileForm(request.POST, instance=student)
-        #     if form.is_valid():
-        #         form.save()
-        #         return redirect('student_my_data')
         
     
     return render(request, "student/dashboard_my_data.html", context)
