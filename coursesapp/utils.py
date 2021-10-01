@@ -34,7 +34,7 @@ def serializer(model_instance, multiple=False):
 
 def report(data):
     regs = CourseRegistration.objects.filter(form=data)
-    name = f'coursesapp/static/coursesapp/reports/course_reg_{data.student.name}'
+    name = f'coursesapp/staticfiles/coursesapp/reports/course_reg_{data.student.name}'
     context = {
     "regs": regs,
     "form": data
