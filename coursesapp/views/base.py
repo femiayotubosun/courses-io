@@ -46,8 +46,8 @@ def signup(request):
         try:
             user = User.objects.get(username=request.POST["username"])
 
-            messages.error(request, "Username already exist")
-            return redirect(reverse("signup"))
+            messages.error(request, "Username already exists.")
+            return redirect(reverse("signup"))  
             # Modal user already exists
         except User.DoesNotExist:
             user = User.objects.create_user(
@@ -57,7 +57,7 @@ def signup(request):
             )
             try:
                 utils.make_user(user, request.POST["registeras"])
-                messages.success(request, "Registrations successful, please login")
+                messages.success(request, "Registration successful, please login.")
                 return redirect(reverse("login"))
             except Exception as e:
                 return redirect(reverse("signup"))
