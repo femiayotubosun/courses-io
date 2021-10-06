@@ -54,18 +54,18 @@
 
 **Adivser User**
 
-username: adviser
-password: adviser123
+**username**: adviser
+**password**: adviser123
 
 **Lecturer User**
 
-username: lecturer
-password: lecturer123
+**username**: lecturer
+**password**: lecturer123
 
 **Student User**
 
-username: student
-password: student123
+**username**: student
+**password**: student123
 
 **Admin User**
 
