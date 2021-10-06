@@ -12,7 +12,7 @@
 
 ## 👩🏻‍🏫 Jargon Table 
 
-| JARGON                   |                                                  DESCRIPTION |
+| TERM                   |                                                  DESCRIPTION |
 | ------------------------ | -----------------------------------------------------------: |
 | Department               | University Majors e.g Computer Science, Software Engineering e.tc. |
 | Course                   |            Courses to be offered e.g CSC 1101, MTH 1101 et.c |
