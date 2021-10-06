@@ -1,5 +1,6 @@
+import random
 from django.contrib.auth.models import Group
-from coursesapp.models import CourseRegistration, Lecturer, LevelAdviser, Student
+from coursesapp.models import Course, CourseRegistration, Department, Lecturer, LevelAdviser, Student
 from django.core import serializers
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -65,3 +66,26 @@ def eligible_report(data):
             dest=f)
             
     return f"{name}.pdf"
+
+
+
+def create_courses():
+
+    courses = [('Introduction to Computer Science', 'CSC 101'), ('Introduction to Computer Electronics', 'CSC 221'),
+    ('Elemenentary Mathematics', 'MTH 111'), 
+    ('Elemenentary Mathematics II', 'MTH 121'), 
+    ('General Physics for Physical Sciences I', 'PHY 115'), 
+    ('Probability I', 'STA 111'), ('Use of English', 'GES 1102'), 
+    ('Use of Library', 'GES 1105'), ('Introduction to Engineering', 'ENG 101'), ('Basic Principles of Chemistry','CHM 101' )]
+    
+    c_types = ["COM", "ELE", "REQ"]
+
+    lect = Lecturer.objects.get(user__username="lecturer")
+    dept = Department.objects.get(department_name="Computer Science")
+
+    for course in courses:
+        c_type = random.randint(0, 2)
+        units = random.randint(1, 3)
+        c_type = c_types[c_type]
+        Course.objects.create(course_title=course[0], course_code=course[1], course_units=units, department=dept, lecturer=lect)
+
