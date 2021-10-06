@@ -13,6 +13,7 @@ import django_heroku
 from pathlib import Path
 import os
 import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,18 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-1kw+pot-rwju8baveq#nx+-d=jrm_%%#m-3zl!l6zec89b*(c)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [".herokuapp.com"]
 
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env()
 
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env("SECRET_KEY")
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +41,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind",
     "jazzmin",
-    'rest_framework',
+    "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -83,17 +85,17 @@ WSGI_APPLICATION = "coursesio.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
- "default": {
+    "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env('DATABASE_NAME'),
-        "USER": env('DATABASE_USER'),
-        "PASSWORD": env('DATABASE_PASSWORD'),
-        "HOST": env('DATABASE_HOST'),
-        'PORT': '5432'
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST"),
+        "PORT": "5432",
     }
 }
 
-    
+
 #    "default": {
 #         "ENGINE": "django.db.backends.sqlite3",
 #         "NAME": BASE_DIR / "db.sqlite3",
@@ -146,11 +148,11 @@ LOGIN_REDIRECT_URL = "/"
 
 EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
-    "MAILJET_API_KEY": env('MAILJET_API_KEY'),
-    "MAILJET_SECRET_KEY": env('MAILJET_SECRET_KEY'),
-} 
+    "MAILJET_API_KEY": env("MAILJET_API_KEY"),
+    "MAILJET_SECRET_KEY": env("MAILJET_SECRET_KEY"),
+}
 
-DEFAULT_FROM_EMAIL = env('DEFAULT_MAIL')
+DEFAULT_FROM_EMAIL = env("DEFAULT_MAIL")
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)

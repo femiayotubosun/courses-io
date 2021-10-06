@@ -25,8 +25,10 @@ def dashboard(request):
     courses = Course.objects.filter(lecturer=lecturer)
     timeline = AcademicTimeline.get_current()
 
-    students = Student.objects.filter(courseregistration__course__in=courses, courseregistration__academic_timeline=timeline)
-
+    students = Student.objects.filter(
+        courseregistration__course__in=courses,
+        courseregistration__academic_timeline=timeline,
+    )
 
     return render(
         request,
@@ -120,9 +122,11 @@ def course_archives(request, course_id):
 
     if request.method == "POST":
         try:
-            yr = AcademicYear.objects.get(pk=request.POST['academic_year'])
-            semester = request.POST['academic_semester']
-            tl= AcademicTimeline.objects.get(academic_year=yr, academic_semester=semester)
+            yr = AcademicYear.objects.get(pk=request.POST["academic_year"])
+            semester = request.POST["academic_semester"]
+            tl = AcademicTimeline.objects.get(
+                academic_year=yr, academic_semester=semester
+            )
             form = TimelineForm(request.POST, instance=tl)
             regs = CourseRegistration.objects.filter(
                 academic_timeline=tl, course=course
@@ -140,9 +144,7 @@ def course_archives(request, course_id):
             return redirect(
                 reverse("lecturer_course_archives", kwargs={"course_id": course_id})
             )
-                # TODO: Modal for not found
-
-
+            # TODO: Modal for not found
 
     # :TODO
     return render(
@@ -152,22 +154,24 @@ def course_archives(request, course_id):
     )
 
 
-
-
-
 @login_required
 @permission_required("coursesapp.is_lecturer")
 def profile(request):
     lecturer = Lecturer.objects.get(user=request.user)
     form = LecturerForm(instance=lecturer)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LecturerForm(request.POST, instance=lecturer)
         if form.is_valid():
             form.save()
-            return redirect(reverse('lecturer_profile'))
-    
-    return render(request, "lecturer/dashboard_profile.html", {"form": form, "title": "Dashboard", "header": "Dashboard | Lecturer"})
+            return redirect(reverse("lecturer_profile"))
+
+    return render(
+        request,
+        "lecturer/dashboard_profile.html",
+        {"form": form, "title": "Dashboard", "header": "Dashboard | Lecturer"},
+    )
+
 
 @login_required
 @permission_required("coursesapp.is_lecturer")
@@ -176,8 +180,15 @@ def approve_course_reg(request, course_id, student_id):
         course__id=course_id, student__id=student_id
     )
     course_reg.approve_course_reg()
-    messages.success(request, 'Approved successfully')
-    return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id,}))
+    messages.success(request, "Approved successfully")
+    return redirect(
+        reverse(
+            "lecturer_one_course",
+            kwargs={
+                "course_id": course_id,
+            },
+        )
+    )
 
 
 @login_required
@@ -187,7 +198,7 @@ def reject_course_reg(request, course_id, student_id):
         course__id=course_id, student__id=student_id
     )
     course_reg.reject_course_reg()
-    messages.error(request, 'Rejected successfully')
+    messages.error(request, "Rejected successfully")
     return redirect(reverse("lecturer_one_course", kwargs={"course_id": course_id}))
 
 
@@ -197,16 +208,18 @@ def print_eligible(request, course_id):
     course = Course.objects.get(pk=course_id)
     timeline = AcademicTimeline.get_current()
     lecturer = Lecturer.objects.get(user=request.user)
-    regs = CourseRegistration.objects.filter(course=course, academic_timeline=timeline, status="APR")
+    regs = CourseRegistration.objects.filter(
+        course=course, academic_timeline=timeline, status="APR"
+    )
 
     context = {
         "timeline": timeline,
         "course": course,
         "lecturer": lecturer,
-        "regs": regs
+        "regs": regs,
     }
 
     data = utils.eligible_report(context)
-    data = open(data, 'rb')
+    data = open(data, "rb")
     response = FileResponse(data, as_attachment=True)
     return response
