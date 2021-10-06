@@ -22,7 +22,7 @@
 | Admin                    |                                         System Administrator |
 | Level                    | A student's year in the university e.g 100 Level, 200 Level, etc. |
 | Student Class            | A unique combination of Level and Department e.g Computer Science 200 Level |
-| Prerequisite(s)          | A course's prerequisites are courses a students must have a grade of least an 'E' in previous Acadmemic Timelines in order to be able to register the said course |
+| Prerequisite(s)          | A course's prerequisites are courses a students must have at least a grade of 'E' on in previous Acadmemic Timelines in order to be able to register the said course |
 | Carryover                |               A course in which a student has a grade of 'F' |
 | Course Registration      | A record of a student's desire to offer a course in a particular Academic Timeline and the approval of the Management(Lecturer or Adviser) |
 | Academic Timeline        | Unique Combination of Academic Session and Semester e.g '2020/2021 First Semester' Timeline |
@@ -30,7 +30,6 @@
 | Units                    |                                       The weight of a course |
 | Max Units                | The maximum units a Student in a Student Class can register in an Academic Timeline |
 | Semester Allocation      | Courses a Student Class is to offer in a particular Academic Timeline |
-|                          |                                                              |
 
 ## 🎢 Features
 
