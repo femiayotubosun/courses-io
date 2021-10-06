@@ -1,6 +1,7 @@
 # 📚 Courses.io
 
 ### A university course registration system
+---
 
 
 ##   🔩 Tech Stack
@@ -58,17 +59,22 @@
 
 **password**: adviser123
 
+---
 **Lecturer User**
 
 **username**: lecturer
 
 **password**: lecturer123
 
+---
+
 **Student User**
 
 **username**: student
 
 **password**: student123
+
+---
 
 **Admin User**
 
